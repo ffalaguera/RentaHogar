@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  // Sustituye por la URL real de tu API en Render (ej: https://rentahogar-api.onrender.com/api)
-  apiUrl: 'https://rentahogar-api.onrender.com/api',
+  // URL del backend API en Render
+  apiUrl: 'https://rentahogar-0u86.onrender.com/api',
 };
