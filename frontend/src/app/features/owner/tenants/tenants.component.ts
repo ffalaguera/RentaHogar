@@ -93,6 +93,9 @@ export class OwnerTenantsComponent implements OnInit {
         this.isError.set(false);
         this.successMsg.set('Inquilino registrado correctamente.');
         this.loadTenants();
+        this.propertyService.getProperties({ limit: 50 }).subscribe({
+          next: (r) => this.properties.set(r.data),
+        });
         setTimeout(() => {
           this.showModal.set(false);
           this.successMsg.set('');
@@ -186,6 +189,12 @@ export class OwnerTenantsComponent implements OnInit {
 
   onPropertyChange(): void {
     this.form.room = null;
+    // En modo 'full', pre-rellenar el alquiler sugerido para que el backend lo reciba
+    if (this.getSelectedRentMode() === 'full') {
+      this.form.monthlyRent = this.getSuggestedFullRent();
+    } else {
+      this.form.monthlyRent = 0;
+    }
   }
 
   onRoomChange(roomValue: string): void {

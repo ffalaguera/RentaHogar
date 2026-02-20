@@ -221,12 +221,27 @@ export const getDashboardSummary = async (
     const assignments = await TenantAssignment.find({
       owner: req.user!._id,
       isActive: true,
-    });
+    }).populate('property', 'name monthlyRent');
 
-    const monthlyRentTotal = assignments.reduce(
-      (sum: number, a: any) => sum + Number(a.monthlyRent || 0),
-      0,
-    );
+    // Fallback: si monthlyRent es 0 (datos legacy/seed antiguo), usar propiedad repartida
+    const byProperty = new Map<string, number>();
+    for (const a of assignments) {
+      const propId = String((a as any).property?._id ?? (a as any).property?.id ?? (a as any).property ?? '');
+      if (propId) byProperty.set(propId, (byProperty.get(propId) ?? 0) + 1);
+    }
+    let monthlyRentTotal = 0;
+    for (const a of assignments) {
+      const rent = Number((a as any).monthlyRent);
+      if (rent > 0) {
+        monthlyRentTotal += rent;
+      } else {
+        const prop = (a as any).property;
+        const propRent = Number(prop?.monthlyRent ?? 0);
+        const propId = String(prop?._id ?? prop?.id ?? '');
+        const count = byProperty.get(propId) ?? 1;
+        monthlyRentTotal += propRent > 0 ? propRent / count : 0;
+      }
+    }
     const annualExpectedRent = monthlyRentTotal * 12;
 
     const allPayments = await Payment.find({

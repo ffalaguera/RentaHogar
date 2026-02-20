@@ -127,9 +127,9 @@ export const registerTenant = async (
       const activeCount = activeAssignments.length;
       const baseRent = Number(property.monthlyRent || 0);
       const autoRent = activeCount >= 0 ? baseRent / (activeCount + 1) : baseRent;
-
-      finalMonthlyRent =
-        typeof monthlyRent === 'number' && monthlyRent > 0 ? monthlyRent : autoRent;
+      const rentFromBody = Number(monthlyRent);
+      // Aceptar rent del frontend (también si viene como string) o calcular reparto automático
+      finalMonthlyRent = rentFromBody > 0 ? rentFromBody : autoRent;
     }
 
     let assignment: any;
@@ -232,6 +232,23 @@ export const getTenants = async (
       .populate('tenant', 'fullName email phone avatar isActive')
       .populate('property', 'name address monthlyRent')
       .sort({ createdAt: -1 });
+
+    // Fallback: si monthlyRent es 0 (datos legacy/seed antiguo), calcular desde la propiedad
+    const byProperty = new Map<string, number>();
+    for (const a of assignments) {
+      const propId = String((a as any).property?._id ?? (a as any).property?.id ?? (a as any).property);
+      if (!propId) continue;
+      byProperty.set(propId, (byProperty.get(propId) ?? 0) + 1);
+    }
+    for (const a of assignments) {
+      const rent = Number((a as any).monthlyRent);
+      if (rent > 0) continue;
+      const prop = (a as any).property;
+      const propRent = Number(prop?.monthlyRent ?? 0);
+      const propId = String(prop?._id ?? prop?.id ?? '');
+      const count = byProperty.get(propId) ?? 1;
+      (a as any).monthlyRent = propRent > 0 ? propRent / count : 0;
+    }
 
     let results = assignments;
 

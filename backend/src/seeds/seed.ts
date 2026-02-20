@@ -159,14 +159,19 @@ const seedData = async (): Promise<void> => {
       tenants.push(t);
     }
 
-    // ── Asignaciones ──
+    // ── Asignaciones (con monthlyRent según propiedad y reparto entre inquilinos) ──
     console.log('🔗 Asignando inquilinos a propiedades...');
+    const prop0Rent = 850;
+    const prop1Rent = 550;
+    const prop2Rent = 1200;
+    const prop3Rent = 1100;
+    // Piso Centro: 2 inquilinos → 850/2 = 425 cada uno; resto: 1 inquilino = alquiler completo
     await TenantAssignment.insertMany([
-      { tenant: tenants[0]._id, property: properties[0]._id, owner: owner1._id },
-      { tenant: tenants[1]._id, property: properties[0]._id, owner: owner1._id },
-      { tenant: tenants[2]._id, property: properties[1]._id, owner: owner1._id },
-      { tenant: tenants[3]._id, property: properties[3]._id, owner: owner2._id },
-      { tenant: tenants[4]._id, property: properties[2]._id, owner: owner1._id },
+      { tenant: tenants[0]._id, property: properties[0]._id, owner: owner1._id, monthlyRent: prop0Rent / 2 },
+      { tenant: tenants[1]._id, property: properties[0]._id, owner: owner1._id, monthlyRent: prop0Rent / 2 },
+      { tenant: tenants[2]._id, property: properties[1]._id, owner: owner1._id, monthlyRent: prop1Rent },
+      { tenant: tenants[3]._id, property: properties[3]._id, owner: owner2._id, monthlyRent: prop3Rent },
+      { tenant: tenants[4]._id, property: properties[2]._id, owner: owner1._id, monthlyRent: prop2Rent },
     ]);
 
     // ── Pagos ──
@@ -177,12 +182,13 @@ const seedData = async (): Promise<void> => {
     const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
 
+    const anaPedroRent = 425; // 850/2 para Piso Centro
     await Payment.insertMany([
       {
         tenant: tenants[0]._id,
         property: properties[0]._id,
         owner: owner1._id,
-        amount: 850,
+        amount: anaPedroRent,
         month: prevMonth,
         year: prevYear,
         dueDate: new Date(prevYear, prevMonth - 1, 5),
@@ -194,7 +200,7 @@ const seedData = async (): Promise<void> => {
         tenant: tenants[0]._id,
         property: properties[0]._id,
         owner: owner1._id,
-        amount: 850,
+        amount: anaPedroRent,
         month: currentMonth,
         year: currentYear,
         dueDate: new Date(currentYear, currentMonth - 1, 5),
@@ -204,7 +210,7 @@ const seedData = async (): Promise<void> => {
         tenant: tenants[1]._id,
         property: properties[0]._id,
         owner: owner1._id,
-        amount: 850,
+        amount: anaPedroRent,
         month: currentMonth,
         year: currentYear,
         dueDate: new Date(currentYear, currentMonth - 1, 1),
