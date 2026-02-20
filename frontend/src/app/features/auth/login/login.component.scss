@@ -1,0 +1,86 @@
+@use 'sass:color';
+@use '../../../../scss/_utilities/variables' as *;
+@use '../../../../scss/_utilities/mixins' as *;
+
+.c-auth {
+  min-height: 100vh;
+  @include flex-center;
+  background: linear-gradient(
+    135deg,
+    $color-gray-900 0%,
+    color.adjust($color-primary, $lightness: -25%) 100%
+  );
+  padding: 1rem;
+
+  &__card {
+    width: 100%;
+    max-width: 420px;
+    background: $color-white;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-xl;
+    overflow: hidden;
+  }
+
+  &__header {
+    @include gradient-primary;
+    padding: 2rem;
+    text-align: center;
+    color: $color-white;
+  }
+
+  &__logo {
+    @include font-size('2xl');
+    @include font-weight('bold');
+  }
+
+  &__subtitle {
+    @include font-size('sm');
+    opacity: 0.85;
+    margin-top: 0.25rem;
+  }
+
+  &__body {
+    padding: 2rem;
+  }
+
+  &__back {
+    border: none;
+    background: transparent;
+    color: $color-text-secondary;
+    @include font-size('sm');
+    margin-bottom: 0.75rem;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  &__title {
+    @include font-size('xl');
+    @include font-weight('bold');
+    color: $color-gray-800;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  &__footer {
+    padding: 1.25rem 2rem;
+    text-align: center;
+    background: $color-gray-50;
+    @include font-size('sm');
+    color: $color-text-secondary;
+    border-top: 1px solid $color-border;
+  }
+
+  &__link {
+    color: $color-primary;
+    @include font-weight('semibold');
+
+    &:hover {
+      color: $color-primary-dark;
+    }
+  }
+}

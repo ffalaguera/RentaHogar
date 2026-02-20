@@ -1,0 +1,52 @@
+<main class="c-auth">
+  <section class="c-auth__card">
+    <header class="c-auth__header">
+      <h1 class="c-auth__logo">🏠 RentaHogar</h1>
+      <p class="c-auth__subtitle">Gestión inteligente de alquileres</p>
+    </header>
+    <div class="c-auth__body">
+      <button type="button" class="c-auth__back" routerLink="/">
+        ← Volver al inicio
+      </button>
+      <h2 class="c-auth__title">Iniciar sesión</h2>
+      <form class="c-form" (ngSubmit)="onSubmit()">
+        <div class="c-form__group">
+          <label class="c-form__label" for="email">Correo electrónico</label>
+          <input
+            id="email"
+            type="email"
+            class="c-form__input"
+            [class.c-form__input--error]="error()"
+            placeholder="tu@email.com"
+            [(ngModel)]="email"
+            name="email"
+            autocomplete="email"
+            required
+          />
+        </div>
+        <div class="c-form__group">
+          <label class="c-form__label" for="password">Contraseña</label>
+          <input
+            id="password"
+            type="password"
+            class="c-form__input"
+            [class.c-form__input--error]="error()"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+            name="password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+        <p class="c-form__error" *ngIf="error()">{{ error() }}</p>
+        <button type="submit" class="c-button c-button--full c-button--lg" [disabled]="loading()">
+          <span class="c-button__spinner" *ngIf="loading()"></span>
+          {{ loading() ? 'Entrando...' : 'Iniciar sesión' }}
+        </button>
+      </form>
+    </div>
+    <footer class="c-auth__footer">
+      <p>¿No tienes cuenta? <a routerLink="/register" class="c-auth__link">Registrarse como propietario</a></p>
+    </footer>
+  </section>
+</main>

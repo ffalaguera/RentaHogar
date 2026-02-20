@@ -1,0 +1,208 @@
+<section class="l-page">
+  <header class="l-page__header">
+    <div>
+      <h2 class="l-page__title">Dashboard</h2>
+      <p class="l-page__subtitle">Resumen general de tus propiedades y alquileres</p>
+    </div>
+  </header>
+
+  <!-- Stat Cards Row -->
+  <div class="l-grid l-grid--4 g-mb-6" *ngIf="summary()" @cardStagger>
+    <article class="c-stat-card">
+      <div class="c-stat-card__content">
+        <p class="c-stat-card__label">Alquiler mensual total</p>
+        <p class="c-stat-card__value">{{ summary()!.currentMonth.totalRent | number:'1.0-0' }}€</p>
+      </div>
+      <div class="c-stat-card__icon" style="background: rgba(102,126,234,0.1);">💰</div>
+    </article>
+
+    <article class="c-stat-card">
+      <div class="c-stat-card__content">
+        <p class="c-stat-card__label">Cobrado este mes</p>
+        <p class="c-stat-card__value" style="color: #48bb78;">{{ summary()!.currentMonth.paid | number:'1.0-0' }}€</p>
+      </div>
+      <div class="c-stat-card__icon" style="background: rgba(72,187,120,0.1);">✅</div>
+    </article>
+
+    <article class="c-stat-card">
+      <div class="c-stat-card__content">
+        <p class="c-stat-card__label">Pendiente este mes</p>
+        <p class="c-stat-card__value" style="color: #f56565;">{{ summary()!.currentMonth.pending | number:'1.0-0' }}€</p>
+      </div>
+      <div class="c-stat-card__icon" style="background: rgba(245,101,101,0.1);">⏳</div>
+    </article>
+
+    <article class="c-stat-card">
+      <div class="c-stat-card__content">
+        <p class="c-stat-card__label">Total anual ({{ summary()!.year }})</p>
+        <p class="c-stat-card__value">{{ summary()!.currentYear.totalRent | number:'1.0-0' }}€</p>
+      </div>
+      <div class="c-stat-card__icon" style="background: rgba(118,75,162,0.1);">📊</div>
+    </article>
+  </div>
+
+  <div class="l-dashboard">
+    <!-- Cobros del mes actual (Retrasados, Pendientes, Cobrados) -->
+    <div class="l-dashboard__half">
+      <article class="c-card">
+        <header class="c-card__header">
+          <h3 class="c-card__title">💰 Cobros {{ getCurrentMonthLabel() }}</h3>
+          <a routerLink="/owner/payments" class="c-badge c-badge--primary">Ver todos</a>
+        </header>
+        <div class="c-card__body">
+          <div class="c-payments-sections">
+            <!-- Retrasados -->
+            <div class="c-payments-section">
+              <h4 class="c-payments-section__title c-payments-section__title--red">⏰ Retrasados</h4>
+              <div class="c-overdue" *ngIf="overduePayments().length > 0">
+                <article
+                  class="c-overdue__item"
+                  *ngFor="let payment of overduePayments()"
+                  [ngClass]="'c-overdue__item--' + getPaymentColorLevel(payment)"
+                >
+                  <div class="c-overdue__info">
+                    <p class="c-overdue__name">{{ payment.tenant?.fullName || '—' }}</p>
+                    <p class="c-overdue__property">{{ payment.property?.name || '—' }}</p>
+                  </div>
+                  <div class="c-overdue__delay">
+                    <span
+                      class="c-badge"
+                      [ngClass]="'c-badge--' + getPaymentColorLevel(payment)"
+                    >
+                      <span class="c-badge__dot"></span>
+                      {{ getDaysOverdue(payment) }} días
+                    </span>
+                    <p class="c-overdue__amount">{{ payment.amount | number:'1.2-2' }}€</p>
+                    <button
+                      class="c-button c-button--success c-button--sm"
+                      [disabled]="saving()"
+                      (click)="markPaymentAsPaid(payment)"
+                    >
+                      Marcar cobrado
+                    </button>
+                  </div>
+                </article>
+              </div>
+              <p *ngIf="overduePayments().length === 0" class="c-payments-section__empty">Sin retrasos</p>
+            </div>
+
+            <!-- Pendientes -->
+            <div class="c-payments-section">
+              <h4 class="c-payments-section__title c-payments-section__title--yellow">⏳ Pendientes</h4>
+              <div class="c-overdue" *ngIf="pendingPayments().length > 0">
+                <article class="c-overdue__item c-overdue__item--yellow" *ngFor="let payment of pendingPayments()">
+                  <div class="c-overdue__info">
+                    <p class="c-overdue__name">{{ payment.tenant?.fullName || '—' }}</p>
+                    <p class="c-overdue__property">{{ payment.property?.name || '—' }}</p>
+                  </div>
+                  <div class="c-overdue__delay">
+                    <p class="c-overdue__amount">{{ payment.amount | number:'1.2-2' }}€</p>
+                    <button
+                      class="c-button c-button--success c-button--sm"
+                      [disabled]="saving()"
+                      (click)="markPaymentAsPaid(payment)"
+                    >
+                      Marcar cobrado
+                    </button>
+                  </div>
+                </article>
+              </div>
+              <p *ngIf="pendingPayments().length === 0" class="c-payments-section__empty">Sin pendientes</p>
+            </div>
+
+            <!-- Cobrados -->
+            <div class="c-payments-section">
+              <h4 class="c-payments-section__title c-payments-section__title--green">✅ Cobrados</h4>
+              <div class="c-overdue" *ngIf="paidPayments().length > 0">
+                <article class="c-overdue__item c-overdue__item--green" *ngFor="let payment of paidPayments()">
+                  <div class="c-overdue__info">
+                    <p class="c-overdue__name">{{ payment.tenant?.fullName || '—' }}</p>
+                    <p class="c-overdue__property">{{ payment.property?.name || '—' }}</p>
+                  </div>
+                  <div class="c-overdue__delay">
+                    <p class="c-overdue__amount">{{ payment.amount | number:'1.2-2' }}€</p>
+                    <span style="color:#48bb78;">✓ Cobrado</span>
+                  </div>
+                </article>
+              </div>
+              <p *ngIf="paidPayments().length === 0" class="c-payments-section__empty">Sin cobros este mes</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Incidents Board -->
+    <div class="l-dashboard__half">
+      <article class="c-card">
+        <header class="c-card__header">
+          <h3 class="c-card__title">⚠️ Incidencias abiertas</h3>
+          <span class="c-badge c-badge--red" *ngIf="incidents().length > 0">{{ incidents().length }}</span>
+        </header>
+        <div class="c-card__body">
+          <div class="c-incidents" *ngIf="incidents().length > 0">
+            <article class="c-incidents__item" *ngFor="let incident of incidents()">
+              <div class="c-incidents__header">
+                <span class="c-badge" [ngClass]="'c-badge--' + getPriorityClass(incident.priority)">
+                  {{ incident.priority === 'urgent' ? '🔴' : incident.priority === 'high' ? '🟡' : '🔵' }}
+                  {{ incident.priority }}
+                </span>
+                <span class="c-badge c-badge--gray">{{ getStatusLabel(incident.status) }}</span>
+              </div>
+              <h4 class="c-incidents__title">{{ incident.title }}</h4>
+              <p class="c-incidents__meta">
+                {{ incident.tenant.fullName }} · {{ incident.property.name }}
+              </p>
+              <div class="c-incidents__actions">
+                <button class="c-button c-button--sm c-button--secondary" (click)="resolveIncident(incident._id)">
+                  Resolver incidencia
+                </button>
+              </div>
+            </article>
+          </div>
+          <div class="c-empty" *ngIf="incidents().length === 0">
+            <p class="c-empty__icon">✨</p>
+            <p class="c-empty__title">Sin incidencias</p>
+            <p class="c-empty__text">No hay incidencias abiertas en este momento.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Properties with tenants (house icons) -->
+    <div class="l-dashboard__full">
+      <article class="c-card">
+        <header class="c-card__header">
+          <h3 class="c-card__title">🏘️ Mis propiedades</h3>
+          <a routerLink="/owner/properties" class="c-badge c-badge--primary">Ver todas</a>
+        </header>
+        <div class="c-card__body">
+          <div class="c-properties-grid" *ngIf="properties().length > 0">
+            <article class="c-property-house" *ngFor="let prop of properties()">
+              <div class="c-property-house__roof">
+                <span class="c-property-house__icon">{{ getPropertyTypeEmoji(prop.type) }}</span>
+              </div>
+              <div class="c-property-house__body">
+                <h4 class="c-property-house__name">{{ prop.name }}</h4>
+                <p class="c-property-house__rent">{{ (prop.currentMonthlyRent ?? prop.monthlyRent) | number:'1.2-2' }}€/mes</p>
+                <div class="c-property-house__tenants">
+                  <span
+                    class="c-property-house__tenant-emoji"
+                    *ngFor="let tenant of prop.tenants; let i = index"
+                    [title]="tenant.fullName"
+                    (click)="goToTenantProfile(tenant.id || tenant._id!)"
+                  >
+                    {{ getTenantEmojiForTenant(tenant) }}
+                  </span>
+                  <span class="c-property-house__empty-text" *ngIf="!prop.tenants || prop.tenants.length === 0">
+                    Sin inquilinos
+                  </span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

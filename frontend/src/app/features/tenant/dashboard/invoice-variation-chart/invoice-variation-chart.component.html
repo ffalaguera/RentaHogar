@@ -1,0 +1,23 @@
+<article class="c-card invoice-variation-chart">
+  <header class="c-card__header">
+    <h3 class="c-card__title">📊 Resumen de facturas anual</h3>
+  </header>
+  <div class="c-card__body">
+    <div *ngIf="loading()" class="invoice-variation-chart__loading">
+      <span class="c-button__spinner"></span>
+      <p>Cargando datos...</p>
+    </div>
+
+    <div *ngIf="error()" class="invoice-variation-chart__error">
+      <p>{{ error() }}</p>
+    </div>
+
+    <div *ngIf="!loading() && !error() && !hasData()" class="c-empty" style="padding: 1.5rem;">
+      <p class="c-empty__text">No hay facturas de agua, electricidad, internet o gas para mostrar.</p>
+    </div>
+
+    <div *ngIf="!loading() && !error() && hasData()" class="invoice-variation-chart__chart-wrapper">
+      <canvas #chartCanvas></canvas>
+    </div>
+  </div>
+</article>

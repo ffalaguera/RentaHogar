@@ -1,0 +1,84 @@
+@use 'sass:map';
+@use '../_utilities/variables' as *;
+
+// ── Auto-generated spacing classes (margin & padding) ──
+@each $key, $value in $spacing {
+  .g-m-#{$key} { margin: $value; }
+  .g-mt-#{$key} { margin-top: $value; }
+  .g-mb-#{$key} { margin-bottom: $value; }
+  .g-ml-#{$key} { margin-left: $value; }
+  .g-mr-#{$key} { margin-right: $value; }
+  .g-mx-#{$key} { margin-left: $value; margin-right: $value; }
+  .g-my-#{$key} { margin-top: $value; margin-bottom: $value; }
+
+  .g-p-#{$key} { padding: $value; }
+  .g-pt-#{$key} { padding-top: $value; }
+  .g-pb-#{$key} { padding-bottom: $value; }
+  .g-pl-#{$key} { padding-left: $value; }
+  .g-pr-#{$key} { padding-right: $value; }
+  .g-px-#{$key} { padding-left: $value; padding-right: $value; }
+  .g-py-#{$key} { padding-top: $value; padding-bottom: $value; }
+}
+
+// ── Auto-generated color classes ──
+@each $name, $color in $colors {
+  .g-text-#{$name} { color: $color; }
+  .g-bg-#{$name} { background-color: $color; }
+}
+
+// ── Auto-generated font-size classes ──
+@each $name, $size in $font-sizes {
+  .g-text-#{$name} { font-size: $size; }
+}
+
+// ── Auto-generated font-weight classes ──
+@each $name, $weight in $font-weights {
+  .g-font-#{$name} { font-weight: $weight; }
+}
+
+// ── Display utilities ──
+.g-hidden { display: none; }
+.g-block { display: block; }
+.g-flex { display: flex; }
+.g-grid { display: grid; }
+.g-inline-flex { display: inline-flex; }
+
+// ── Text alignment ──
+.g-text-left { text-align: left; }
+.g-text-center { text-align: center; }
+.g-text-right { text-align: right; }
+
+// ── Responsive visibility ──
+@each $bp, $value in $breakpoints {
+  @media (max-width: ($value - 1px)) {
+    .g-hide-below-#{$bp} { display: none !important; }
+  }
+  @media (min-width: $value) {
+    .g-hide-above-#{$bp} { display: none !important; }
+  }
+}
+
+// ── Container ──
+.g-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+
+  @media (min-width: map.get($breakpoints, 'lg')) {
+    padding: 0 2rem;
+  }
+}
+
+// ── Screen reader only ──
+.g-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

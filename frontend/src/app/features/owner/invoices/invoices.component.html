@@ -1,0 +1,175 @@
+<section class="l-page">
+  <header class="l-page__header">
+    <div>
+      <h2 class="l-page__title">Facturas</h2>
+      <p class="l-page__subtitle">Facturas de suministros de tus propiedades</p>
+    </div>
+    <div class="l-page__actions">
+      <button class="c-button" (click)="openModal()">➕ Nueva factura</button>
+    </div>
+  </header>
+
+  <div class="c-card" *ngIf="!loading() && invoices().length > 0">
+    <div class="c-card__body" style="overflow-x:auto;">
+      <table class="c-table">
+        <thead class="c-table__head">
+          <tr>
+            <th class="c-table__th">Tipo</th>
+            <th class="c-table__th">Propiedad</th>
+            <th class="c-table__th">Periodo</th>
+            <th class="c-table__th">Importe</th>
+            <th class="c-table__th">Estado</th>
+            <th class="c-table__th">Acciones</th>
+          </tr>
+        </thead>
+        <tbody [@tableBodyStagger]="invoices().length">
+          <tr class="c-table__row c-table__row--clickable" *ngFor="let inv of invoices()" (click)="openDetailModal(inv)">
+            <td class="c-table__td">{{ typeLabels[inv.type] || inv.type }}</td>
+            <td class="c-table__td">{{ inv.property.name || '—' }}</td>
+            <td class="c-table__td">{{ formatPeriod(inv) }}</td>
+            <td class="c-table__td"><strong>{{ inv.amount | number:'1.2-2' }}€</strong></td>
+            <td class="c-table__td">
+              <span class="c-badge" [ngClass]="inv.isPaid ? 'c-badge--green' : 'c-badge--red'">
+                <span class="c-badge__dot"></span>
+                {{ inv.isPaid ? 'Pagada' : 'Pendiente' }}
+              </span>
+            </td>
+            <td class="c-table__td">
+              <div class="l-flex l-flex--gap-2">
+                <button class="c-button c-button--success c-button--sm" *ngIf="!inv.isPaid" (click)="markAsPaid(inv._id); $event.stopPropagation()">
+                  Marcar pagada
+                </button>
+                <button class="c-button c-button--ghost c-button--sm" (click)="deleteInvoice(inv._id); $event.stopPropagation()">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="c-empty" *ngIf="!loading() && invoices().length === 0">
+    <p class="c-empty__icon">📄</p>
+    <p class="c-empty__title">Sin facturas</p>
+    <p class="c-empty__text">Registra las facturas de suministros de tus propiedades.</p>
+    <button class="c-button" (click)="openModal()">➕ Añadir factura</button>
+  </div>
+</section>
+
+<!-- New Invoice Modal -->
+<div class="c-modal" *ngIf="showModal()" @modalAnimation (click)="showModal.set(false)">
+  <div class="c-modal__content" (click)="$event.stopPropagation()">
+    <header class="c-modal__header">
+      <h3 class="c-modal__title">Nueva factura</h3>
+      <button class="c-button c-button--ghost c-button--sm" (click)="showModal.set(false)">✕</button>
+    </header>
+    <form class="c-form" (ngSubmit)="saveInvoice()">
+      <div class="c-form__row">
+        <div class="c-form__group">
+          <label class="c-form__label" for="invProp">Propiedad</label>
+          <select id="invProp" class="c-form__select" [(ngModel)]="form.propertyId" name="propertyId" required>
+            <option value="">Seleccionar...</option>
+            <option *ngFor="let p of properties()" [value]="p._id">{{ p.name }}</option>
+          </select>
+        </div>
+        <div class="c-form__group">
+          <label class="c-form__label" for="invType">Tipo</label>
+          <select id="invType" class="c-form__select" [(ngModel)]="form.type" name="type" required>
+            <option value="water">💧 Agua</option>
+            <option value="gas">🔥 Gas</option>
+            <option value="electricity">⚡ Electricidad</option>
+            <option value="internet">🌐 Internet</option>
+          </select>
+        </div>
+      </div>
+      <div class="c-form__row">
+        <div class="c-form__group">
+          <label class="c-form__label" for="invAmount">Importe (€)</label>
+          <input id="invAmount" type="number" step="0.01" class="c-form__input" [(ngModel)]="form.amount" name="amount" min="0" required />
+        </div>
+      </div>
+      <div class="c-form__row">
+        <div class="c-form__group">
+          <label class="c-form__label" for="invMonthStart">Mes inicio</label>
+          <input id="invMonthStart" type="number" class="c-form__input" [(ngModel)]="form.monthStart" name="monthStart" min="1" max="12" required />
+        </div>
+        <div class="c-form__group">
+          <label class="c-form__label" for="invYearStart">Año inicio</label>
+          <input id="invYearStart" type="number" class="c-form__input" [(ngModel)]="form.yearStart" name="yearStart" min="2020" required />
+        </div>
+      </div>
+      <div class="c-form__row">
+        <div class="c-form__group">
+          <label class="c-form__label" for="invMonthEnd">Mes fin</label>
+          <input id="invMonthEnd" type="number" class="c-form__input" [(ngModel)]="form.monthEnd" name="monthEnd" min="1" max="12" required />
+        </div>
+        <div class="c-form__group">
+          <label class="c-form__label" for="invYearEnd">Año fin</label>
+          <input id="invYearEnd" type="number" class="c-form__input" [(ngModel)]="form.yearEnd" name="yearEnd" min="2020" required />
+        </div>
+      </div>
+      <div class="c-form__group">
+        <label class="c-form__label" for="invDoc">Documento de la factura</label>
+        <input id="invDoc" type="file" class="c-form__input" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf" (change)="onDocumentSelected($event)" />
+        <p class="c-form__hint">Foto o PDF de la factura (opcional). Máx. 10MB.</p>
+        <div *ngIf="documentFile" class="invoice-doc-preview">
+          <span class="invoice-doc-name">📎 {{ documentFile.name }}</span>
+          <button type="button" class="c-button c-button--ghost c-button--sm" (click)="removeDocument()">Quitar</button>
+        </div>
+      </div>
+      <div class="c-form__actions">
+        <button type="button" class="c-button c-button--secondary" (click)="showModal.set(false)">Cancelar</button>
+        <button type="submit" class="c-button" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Registrar factura' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Invoice Detail Modal -->
+<div class="c-modal c-modal--large" *ngIf="showDetailModal() && selectedInvoice()" @modalAnimation (click)="closeDetailModal()">
+  <div class="c-modal__content invoice-detail" (click)="$event.stopPropagation()">
+    <header class="c-modal__header">
+      <h3 class="c-modal__title">Detalle de factura</h3>
+      <button class="c-button c-button--ghost c-button--sm" (click)="closeDetailModal()">✕</button>
+    </header>
+    <div class="invoice-detail__body">
+      <div class="invoice-detail__document">
+        <div *ngIf="selectedInvoice()?.documentUrl as docUrl" class="invoice-detail__doc-wrapper">
+          <img *ngIf="!docUrl.toLowerCase().endsWith('.pdf')" [src]="getDocumentUrl(docUrl)" alt="Documento factura" class="invoice-detail__img" />
+          <iframe *ngIf="docUrl.toLowerCase().endsWith('.pdf')" [src]="getDocumentUrl(docUrl) | safeUrl" class="invoice-detail__iframe" title="PDF factura"></iframe>
+        </div>
+        <div *ngIf="!selectedInvoice()?.documentUrl" class="invoice-detail__no-doc">
+          <p>📄 Sin documento adjunto</p>
+        </div>
+      </div>
+      <div class="invoice-detail__info" *ngIf="selectedInvoice() as inv">
+        <dl class="invoice-detail__list">
+          <dt>Tipo</dt>
+          <dd>{{ typeLabels[inv.type] || inv.type }}</dd>
+          <dt>Propiedad</dt>
+          <dd>{{ inv.property?.name || '—' }}</dd>
+          <dt>Periodo</dt>
+          <dd>{{ formatPeriod(inv) }}</dd>
+          <dt>Importe</dt>
+          <dd><strong>{{ inv.amount | number:'1.2-2' }}€</strong></dd>
+          <dt>Estado</dt>
+          <dd>
+            <span class="c-badge" [ngClass]="inv.isPaid ? 'c-badge--green' : 'c-badge--red'">
+              {{ inv.isPaid ? 'Pagada' : 'Pendiente' }}
+            </span>
+          </dd>
+          <ng-container *ngIf="inv.notes">
+            <dt>Notas</dt>
+            <dd>{{ inv.notes }}</dd>
+          </ng-container>
+        </dl>
+        <div class="invoice-detail__actions">
+          <button class="c-button c-button--success c-button--sm" *ngIf="!inv.isPaid" (click)="markAsPaid(inv._id)">
+            Marcar pagada
+          </button>
+          <a *ngIf="inv.documentUrl" [href]="getDocumentUrl(inv.documentUrl)" target="_blank" rel="noopener" class="c-button c-button--secondary c-button--sm">Abrir documento en nueva pestaña</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

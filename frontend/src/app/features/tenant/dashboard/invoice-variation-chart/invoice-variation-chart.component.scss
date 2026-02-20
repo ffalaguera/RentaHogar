@@ -1,0 +1,34 @@
+@use '../../../../../scss/_utilities/variables' as *;
+@use '../../../../../scss/_utilities/mixins' as *;
+
+.invoice-variation-chart {
+  &__loading,
+  &__error {
+    @include flex-center;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    color: $color-gray-600;
+    @include font-size('xs');
+
+    @include respond-to('sm') {
+      padding: 1.5rem;
+      @include font-size('sm');
+    }
+  }
+
+  &__chart-wrapper {
+    position: relative;
+    min-height: 200px;
+    height: 220px;
+    width: 100%;
+
+    @include respond-to('sm') {
+      height: 240px;
+    }
+
+    @include respond-to('md') {
+      height: 260px;
+    }
+  }
+}

@@ -1,0 +1,163 @@
+<section class="l-page">
+  <header class="l-page__header">
+    <div>
+      <h2 class="l-page__title">Propiedades</h2>
+      <p class="l-page__subtitle">Gestiona tus propiedades en alquiler</p>
+    </div>
+    <div class="l-page__actions">
+      <button class="c-button" (click)="openNewModal()">➕ Nueva propiedad</button>
+    </div>
+  </header>
+
+  <!-- Properties Grid -->
+  <div class="l-grid l-grid--3" *ngIf="!loading() && properties().length > 0" @cardStagger>
+    <article class="c-card c-card--clickable" *ngFor="let prop of properties()">
+      <header class="c-card__header">
+        <div class="l-flex l-flex--gap-3" style="align-items: center;">
+          <span class="c-card__icon" style="background: rgba(102,126,234,0.1); font-size: 1.5rem;">
+            {{ typeEmojis[prop.type] }}
+          </span>
+          <div>
+            <h3 class="c-card__title">{{ prop.name }}</h3>
+            <p class="c-card__subtitle">{{ typeLabels[prop.type] }}</p>
+          </div>
+        </div>
+      </header>
+      <div class="c-card__body">
+        <p class="g-mb-2">📍 {{ prop.address.street }}, {{ prop.address.city }}</p>
+        <div class="l-flex l-flex--gap-4 g-mt-3">
+          <span class="c-badge c-badge--primary">🛏️ {{ prop.bedrooms }}</span>
+          <span class="c-badge c-badge--info">🚿 {{ prop.bathrooms }}</span>
+          <span class="c-badge c-badge--gray">📐 {{ prop.squareMeters }}m²</span>
+        </div>
+        <div class="rent-mode">
+          <span class="rent-mode__icon">{{ rentModeConfig[prop.rentMode || 'full']?.icon || '📄' }}</span>
+          <span class="rent-mode__label">{{ rentModeConfig[prop.rentMode || 'full']?.label }}</span>
+        </div>
+        <div class="l-flex l-flex--gap-2 g-mt-3" *ngIf="prop.tenants && prop.tenants.length > 0">
+          <span class="c-avatar c-avatar--sm" *ngFor="let t of prop.tenants" [title]="t.fullName">
+            {{ t.fullName.charAt(0) }}
+          </span>
+        </div>
+        <p class="g-mt-3" *ngIf="!prop.tenants || prop.tenants.length === 0" style="font-size:0.8rem; color:#a0aec0; font-style:italic;">Sin inquilinos asignados</p>
+      </div>
+      <footer class="c-card__footer">
+        <span style="font-size:1.25rem; font-weight:700; color:#667eea;">{{ (prop.currentMonthlyRent ?? prop.monthlyRent) | number:'1.2-2' }}€<span style="font-size:0.8rem; font-weight:400; color:#a0aec0;">/mes</span></span>
+        <div class="l-flex l-flex--gap-2">
+          <button class="c-button c-button--ghost c-button--sm" (click)="openEditModal(prop); $event.stopPropagation()">✏️</button>
+          <button class="c-button c-button--ghost c-button--sm" (click)="deleteProperty(prop._id); $event.stopPropagation()">🗑️</button>
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  <!-- Empty state -->
+  <div class="c-empty" *ngIf="!loading() && properties().length === 0">
+    <p class="c-empty__icon">🏠</p>
+    <p class="c-empty__title">No tienes propiedades</p>
+    <p class="c-empty__text">Registra tu primera propiedad para empezar a gestionar tus alquileres.</p>
+    <button class="c-button" (click)="openNewModal()">➕ Añadir propiedad</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="c-empty" *ngIf="loading()">
+    <p class="c-empty__icon">⏳</p>
+    <p class="c-empty__title">Cargando propiedades...</p>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="c-modal" *ngIf="showModal()" @modalAnimation (click)="showModal.set(false)">
+  <div class="c-modal__content" (click)="$event.stopPropagation()">
+    <header class="c-modal__header">
+      <h3 class="c-modal__title">{{ editingProperty() ? 'Editar propiedad' : 'Nueva propiedad' }}</h3>
+      <button class="c-button c-button--ghost c-button--sm" (click)="showModal.set(false)">✕</button>
+    </header>
+    <form class="c-form" (ngSubmit)="saveProperty()">
+      <div class="c-form__group">
+        <label class="c-form__label" for="propName">Nombre</label>
+        <input id="propName" class="c-form__input" [(ngModel)]="form.name" name="name" placeholder="Ej: Piso Centro Valencia" required />
+      </div>
+      <div class="c-form__row">
+        <div class="c-form__group">
+          <label class="c-form__label" for="propType">Tipo</label>
+          <select id="propType" class="c-form__select" [(ngModel)]="form.type" name="type">
+            <option value="apartment">Piso</option>
+            <option value="house">Casa</option>
+            <option value="studio">Estudio</option>
+            <option value="room">Habitación</option>
+            <option value="commercial">Local comercial</option>
+          </select>
+        </div>
+        <div class="c-form__group" *ngIf="form.rentMode === 'full'">
+          <label class="c-form__label" for="propRent">Alquiler mensual (€)</label>
+          <input id="propRent" type="number" class="c-form__input" [(ngModel)]="form.monthlyRent" name="monthlyRent" min="0" required />
+        </div>
+      </div>
+      <div class="c-form__group">
+        <label class="c-form__label" for="propRentMode">Tipo de contrato</label>
+        <select id="propRentMode" class="c-form__select" [(ngModel)]="form.rentMode" name="rentMode">
+          <option value="full">Completo (alquiler total)</option>
+          <option value="rooms">Por habitaciones</option>
+        </select>
+        <p class="c-form__hint" *ngIf="form.rentMode === 'full'">
+          El alquiler mensual se aplicará al total de la vivienda. Se puede dividir entre inquilinos desde el formulario de inquilinos.
+        </p>
+        <p class="c-form__hint" *ngIf="form.rentMode === 'rooms'">
+          Define un precio mensual para cada habitación. Cada inquilino se asignará a una habitación concreta.
+        </p>
+      </div>
+      <div class="c-form__group">
+        <label class="c-form__label" for="propStreet">Calle</label>
+        <input id="propStreet" class="c-form__input" [(ngModel)]="form.street" name="street" placeholder="Calle, número, piso" required />
+      </div>
+      <div class="c-form__row">
+        <div class="c-form__group">
+          <label class="c-form__label" for="propCity">Ciudad</label>
+          <input id="propCity" class="c-form__input" [(ngModel)]="form.city" name="city" required />
+        </div>
+        <div class="c-form__group">
+          <label class="c-form__label" for="propPostal">Código postal</label>
+          <input id="propPostal" class="c-form__input" [(ngModel)]="form.postalCode" name="postalCode" required />
+        </div>
+      </div>
+      <div class="c-form__row">
+        <div class="c-form__group">
+          <label class="c-form__label" for="propBeds">Habitaciones</label>
+          <input id="propBeds" type="number" class="c-form__input" [(ngModel)]="form.bedrooms" name="bedrooms" min="0" />
+        </div>
+        <div class="c-form__group">
+          <label class="c-form__label" for="propBaths">Baños</label>
+          <input id="propBaths" type="number" class="c-form__input" [(ngModel)]="form.bathrooms" name="bathrooms" min="0" />
+        </div>
+        <div class="c-form__group">
+          <label class="c-form__label" for="propSquareMeters">Metros cuadrados</label>
+          <input id="propSquareMeters" type="number" class="c-form__input" [(ngModel)]="form.squareMeters" name="squareMeters" min="0" step="0.01" placeholder="Ej: 95.5" />
+        </div>
+      </div>
+      <div class="c-form__group" *ngIf="form.rentMode === 'rooms' && form.bedrooms > 0">
+        <label class="c-form__label">Alquiler por habitación</label>
+        <p class="c-form__hint">Indica el alquiler mensual de cada habitación.</p>
+        <div class="c-form__row" *ngFor="let room of getBedroomNumbers(); let idx = index" style="margin-bottom: 0.5rem;">
+          <div class="c-form__group" style="flex: 1;">
+            <label class="c-form__label">Habitación {{ room }}</label>
+            <input
+              type="number"
+              class="c-form__input"
+              [(ngModel)]="form.roomRents[idx]"
+              name="roomRent{{ room }}"
+              min="0"
+              placeholder="Ej: 400"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="c-form__actions">
+        <button type="button" class="c-button c-button--secondary" (click)="showModal.set(false)">Cancelar</button>
+        <button type="submit" class="c-button" [disabled]="saving()">
+          {{ saving() ? 'Guardando...' : (editingProperty() ? 'Actualizar' : 'Crear propiedad') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

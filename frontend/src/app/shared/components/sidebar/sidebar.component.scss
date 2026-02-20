@@ -1,0 +1,82 @@
+@use '../../../../scss/_utilities/variables' as *;
+@use '../../../../scss/_utilities/mixins' as *;
+
+.c-sidebar {
+  width: 260px;
+  height: 100vh;
+  background: $color-gray-900;
+  color: $color-white;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  @include custom-scrollbar;
+
+  &__header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  &__logo {
+    @include font-size('xl');
+    @include font-weight('bold');
+    color: $color-white;
+  }
+
+  &__tagline {
+    @include font-size('xs');
+    color: $color-gray-400;
+    margin-top: 0.25rem;
+  }
+
+  &__nav {
+    flex: 1;
+    padding: 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: $radius-md;
+    color: $color-gray-400;
+    @include font-size('sm');
+    @include font-weight('medium');
+    transition: all $transition-fast;
+    text-decoration: none;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: $color-white;
+    }
+
+    &--active {
+      background: rgba($color-primary, 0.15);
+      color: $color-primary-light;
+    }
+  }
+
+  &__link-icon {
+    @include font-size('lg');
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  &__link-text {
+    @include truncate;
+  }
+
+  &__footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  &__version {
+    @include font-size('xs');
+    color: $color-gray-500;
+  }
+}

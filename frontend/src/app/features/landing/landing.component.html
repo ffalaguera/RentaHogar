@@ -1,0 +1,355 @@
+<header class="c-landing-nav">
+  <div class="c-landing-nav__container">
+    <a class="c-landing-nav__brand" routerLink="/">
+      <span class="c-landing-nav__brand-icon">🏠</span>
+      <span class="c-landing-nav__brand-text">RentaHogar</span>
+    </a>
+    <nav class="c-landing-nav__links">
+      <a class="c-landing-nav__link" href="#features">Funcionalidades</a>
+      <a class="c-landing-nav__link" href="#how-it-works">Cómo funciona</a>
+      <a class="c-landing-nav__link" href="#stats">Ventajas</a>
+    </nav>
+    <div class="c-landing-nav__actions">
+      <a class="c-landing-nav__btn c-landing-nav__btn--ghost" routerLink="/login">Iniciar sesión</a>
+      <a class="c-landing-nav__btn c-landing-nav__btn--solid" routerLink="/register">Crear cuenta</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="c-hero">
+    <div class="c-hero__bg">
+      <div class="c-hero__orb c-hero__orb--1"></div>
+      <div class="c-hero__orb c-hero__orb--2"></div>
+      <div class="c-hero__orb c-hero__orb--3"></div>
+      <div class="c-hero__grid-pattern"></div>
+    </div>
+    <div class="c-hero__container">
+      <div class="c-hero__content">
+        <span class="c-hero__badge">✨ Gestión de alquileres simplificada</span>
+        <h1 class="c-hero__title">
+          Controla tus alquileres
+          <span class="c-hero__title-accent">sin complicaciones</span>
+        </h1>
+        <p class="c-hero__subtitle">
+          Propiedades, inquilinos, pagos, facturas e incidencias. Todo desde un único panel fullstack (Angular +
+          Node.js + MongoDB), diseñado para que gestionar tus inmuebles sea sencillo y profesional.
+        </p>
+        <div class="c-hero__actions">
+          <a class="c-hero__cta c-hero__cta--primary" routerLink="/register">
+            Empezar gratis
+            <span class="c-hero__cta-arrow">→</span>
+          </a>
+          <a class="c-hero__cta c-hero__cta--outline" href="#features">Descubrir más</a>
+        </div>
+        <div class="c-hero__social-proof">
+          <div class="c-hero__avatars">
+            <span class="c-hero__avatar-circle">C</span>
+            <span class="c-hero__avatar-circle">M</span>
+            <span class="c-hero__avatar-circle">A</span>
+            <span class="c-hero__avatar-circle">P</span>
+          </div>
+          <p class="c-hero__social-text">Ya lo usan propietarios como tú en toda España</p>
+        </div>
+      </div>
+      <div class="c-hero__visual">
+        <div class="c-hero__mockup">
+          <div class="c-hero__mockup-header">
+            <span class="c-hero__mockup-dot"></span>
+            <span class="c-hero__mockup-dot"></span>
+            <span class="c-hero__mockup-dot"></span>
+            <span class="c-hero__mockup-title">Dashboard — Propietario</span>
+          </div>
+          <div class="c-hero__mockup-body">
+            <div class="c-hero__mockup-row">
+              <div class="c-hero__mini-card c-hero__mini-card--blue">
+                <span class="c-hero__mini-icon">💰</span>
+                <span class="c-hero__mini-label">Mensual</span>
+                <span class="c-hero__mini-value">3.450€</span>
+              </div>
+              <div class="c-hero__mini-card c-hero__mini-card--green">
+                <span class="c-hero__mini-icon">✅</span>
+                <span class="c-hero__mini-label">Cobrado</span>
+                <span class="c-hero__mini-value">2.800€</span>
+              </div>
+              <div class="c-hero__mini-card c-hero__mini-card--red">
+                <span class="c-hero__mini-icon">⏳</span>
+                <span class="c-hero__mini-label">Pendiente</span>
+                <span class="c-hero__mini-value">650€</span>
+              </div>
+            </div>
+            <div class="c-hero__mockup-row c-hero__mockup-row--cols">
+              <div class="c-hero__mockup-list">
+                <p class="c-hero__mockup-list-title">⏰ Retrasos</p>
+                <div class="c-hero__mockup-list-item">
+                  <span class="c-hero__mockup-dot-status c-hero__mockup-dot-status--green"></span>
+                  <span>Ana G. — 2 días</span>
+                </div>
+                <div class="c-hero__mockup-list-item">
+                  <span class="c-hero__mockup-dot-status c-hero__mockup-dot-status--yellow"></span>
+                  <span>Pedro R. — 4 días</span>
+                </div>
+                <div class="c-hero__mockup-list-item">
+                  <span class="c-hero__mockup-dot-status c-hero__mockup-dot-status--red"></span>
+                  <span>Laura M. — 8 días</span>
+                </div>
+              </div>
+              <div class="c-hero__mockup-houses">
+                <p class="c-hero__mockup-list-title">🏘️ Propiedades</p>
+                <div class="c-hero__mockup-house-row">
+                  <span class="c-hero__mockup-house">
+                    🏢<br />
+                    <small>Centro</small><br />
+                    👩👨
+                  </span>
+                  <span class="c-hero__mockup-house">
+                    🏡<br />
+                    <small>Playa</small><br />
+                    👩‍🦰
+                  </span>
+                  <span class="c-hero__mockup-house">
+                    🏠<br />
+                    <small>Ruzafa</small><br />
+                    👨‍🦱👩‍🦳
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="c-hero__float c-hero__float--notif">
+          <span>🔔</span>
+          Nueva incidencia recibida
+        </div>
+        <div class="c-hero__float c-hero__float--paid">
+          <span>✅</span>
+          Pago confirmado — 750€
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-features" id="features">
+    <div class="c-features__container">
+      <header class="c-features__header">
+        <span class="c-features__eyebrow">Funcionalidades</span>
+        <h2 class="c-features__title">Todo lo que necesitas para gestionar tus alquileres</h2>
+        <p class="c-features__subtitle">
+          Desde el registro de propiedades hasta la gestión de incidencias y notificaciones, RentaHogar cubre todo el
+          ciclo del alquiler para propietarios e inquilinos.
+        </p>
+      </header>
+      <div class="c-features__grid">
+        <article class="c-feature-card">
+          <div class="c-feature-card__icon-wrap">
+            <span class="c-feature-card__icon">🏘️</span>
+          </div>
+          <h3 class="c-feature-card__title">Propiedades centralizadas</h3>
+          <p class="c-feature-card__desc">
+            Registra todas tus propiedades en un solo lugar. Controla direcciones, tipos, alquileres y ocupación al
+            instante.
+          </p>
+        </article>
+        <article class="c-feature-card" style="animation-delay: 80ms">
+          <div class="c-feature-card__icon-wrap">
+            <span class="c-feature-card__icon">👥</span>
+          </div>
+          <h3 class="c-feature-card__title">Gestión de inquilinos</h3>
+          <p class="c-feature-card__desc">
+            Registra inquilinos con un clic. Reciben sus credenciales de acceso automáticamente por email gracias al
+            backend Node.js.
+          </p>
+        </article>
+        <article class="c-feature-card" style="animation-delay: 160ms">
+          <div class="c-feature-card__icon-wrap">
+            <span class="c-feature-card__icon">💰</span>
+          </div>
+          <h3 class="c-feature-card__title">Control de pagos</h3>
+          <p class="c-feature-card__desc">
+            Visualiza pagos pendientes, cobrados y retrasados. Sistema de alertas por colores según los días de
+            retraso, alimentado por los endpoints de pagos.
+          </p>
+        </article>
+        <article class="c-feature-card" style="animation-delay: 240ms">
+          <div class="c-feature-card__icon-wrap">
+            <span class="c-feature-card__icon">📄</span>
+          </div>
+          <h3 class="c-feature-card__title">Facturas de suministros</h3>
+          <p class="c-feature-card__desc">
+            Registra las facturas de agua, gas, electricidad y más. Tus inquilinos ven el desglose completo desde su
+            portal.
+          </p>
+        </article>
+        <article class="c-feature-card" style="animation-delay: 320ms">
+          <div class="c-feature-card__icon-wrap">
+            <span class="c-feature-card__icon">⚠️</span>
+          </div>
+          <h3 class="c-feature-card__title">Gestión de incidencias</h3>
+          <p class="c-feature-card__desc">
+            Los inquilinos reportan averías directamente desde su panel. El propietario recibe notificaciones en la app
+            y por email.
+          </p>
+        </article>
+        <article class="c-feature-card" style="animation-delay: 400ms">
+          <div class="c-feature-card__icon-wrap">
+            <span class="c-feature-card__icon">🔔</span>
+          </div>
+          <h3 class="c-feature-card__title">Notificaciones en tiempo real</h3>
+          <p class="c-feature-card__desc">
+            Campana de notificaciones, alertas de retraso, nuevos pagos e incidencias gracias al módulo de
+            notificaciones del backend.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-steps" id="how-it-works">
+    <div class="c-steps__container">
+      <header class="c-steps__header">
+        <span class="c-steps__eyebrow">Cómo funciona</span>
+        <h2 class="c-steps__title">Empieza en 4 sencillos pasos</h2>
+      </header>
+      <div class="c-steps__track">
+        <div class="c-steps__line"></div>
+        <article class="c-step">
+          <div class="c-step__number">01</div>
+          <div class="c-step__body">
+            <h3 class="c-step__title">Regístrate como propietario</h3>
+            <p class="c-step__desc">
+              Crea tu cuenta de propietario en menos de un minuto o usa las credenciales de demo de la documentación.
+            </p>
+          </div>
+        </article>
+        <article class="c-step">
+          <div class="c-step__number">02</div>
+          <div class="c-step__body">
+            <h3 class="c-step__title">Añade propiedades</h3>
+            <p class="c-step__desc">
+              Registra tus inmuebles con toda la información relevante desde el panel de propietario.
+            </p>
+          </div>
+        </article>
+        <article class="c-step">
+          <div class="c-step__number">03</div>
+          <div class="c-step__body">
+            <h3 class="c-step__title">Invita inquilinos</h3>
+            <p class="c-step__desc">
+              Registra a tus inquilinos y se les enviará un email con su acceso al portal de inquilino.
+            </p>
+          </div>
+        </article>
+        <article class="c-step">
+          <div class="c-step__number">04</div>
+          <div class="c-step__body">
+            <h3 class="c-step__title">Gestiona todo</h3>
+            <p class="c-step__desc">
+              Pagos, facturas, incidencias, notificaciones y búsquedas globales desde un solo dashboard responsive.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-stats" id="stats">
+    <div class="c-stats__container">
+      <article class="c-stats__item">
+        <p class="c-stats__value">100%</p>
+        <p class="c-stats__label">Código abierto / académico</p>
+      </article>
+      <article class="c-stats__item">
+        <p class="c-stats__value">2</p>
+        <p class="c-stats__label">Roles (propietario e inquilino)</p>
+      </article>
+      <article class="c-stats__item">
+        <p class="c-stats__value">∞</p>
+        <p class="c-stats__label">Propiedades e inquilinos ilimitados</p>
+      </article>
+      <article class="c-stats__item">
+        <p class="c-stats__value">24/7</p>
+        <p class="c-stats__label">Acceso web desde cualquier lugar</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="c-roles">
+    <div class="c-roles__container">
+      <header class="c-roles__header">
+        <span class="c-roles__eyebrow">Dos portales, una plataforma</span>
+        <h2 class="c-roles__title">Diseñado para propietarios e inquilinos</h2>
+      </header>
+      <div class="c-roles__grid">
+        <article class="c-role-card c-role-card--owner">
+          <div class="c-role-card__badge">Propietario</div>
+          <h3 class="c-role-card__title">Panel del propietario</h3>
+          <ul class="c-role-card__list">
+            <li class="c-role-card__item">📊 Dashboard con métricas de alquiler mensual y anual</li>
+            <li class="c-role-card__item">🏘️ Gestión completa de propiedades</li>
+            <li class="c-role-card__item">👥 Registro de inquilinos con envío automático de credenciales</li>
+            <li class="c-role-card__item">💰 Control de pagos con alertas de retraso por colores</li>
+            <li class="c-role-card__item">📄 Registro de facturas de suministros</li>
+            <li class="c-role-card__item">⚠️ Tablero de incidencias reportadas</li>
+            <li class="c-role-card__item">🔍 Búsqueda global de propiedades, inquilinos y pagos</li>
+            <li class="c-role-card__item">🔔 Centro de notificaciones para eventos clave</li>
+          </ul>
+        </article>
+        <article class="c-role-card c-role-card--tenant">
+          <div class="c-role-card__badge">Inquilino</div>
+          <h3 class="c-role-card__title">Portal del inquilino</h3>
+          <ul class="c-role-card__list">
+            <li class="c-role-card__item">👤 Información del casero visible</li>
+            <li class="c-role-card__item">🏠 Alquiler mensual y desglose de facturas</li>
+            <li class="c-role-card__item">✅ Estado de pago con indicador de colores</li>
+            <li class="c-role-card__item">⚠️ Reportar incidencias al propietario</li>
+            <li class="c-role-card__item">📬 Notificación automática por email al casero</li>
+            <li class="c-role-card__item">📋 Historial de incidencias con respuesta del propietario</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-cta">
+    <div class="c-cta__container">
+      <div class="c-cta__orb c-cta__orb--1"></div>
+      <div class="c-cta__orb c-cta__orb--2"></div>
+      <h2 class="c-cta__title">¿Listo para simplificar la gestión de tus alquileres?</h2>
+      <p class="c-cta__text">
+        Crea tu cuenta ahora y empieza a gestionar tus propiedades como un profesional con un stack moderno (Angular,
+        Node.js, MongoDB).
+      </p>
+      <div class="c-cta__actions">
+        <a class="c-cta__btn c-cta__btn--primary" routerLink="/register">Crear cuenta gratis</a>
+        <a class="c-cta__btn c-cta__btn--ghost" routerLink="/login">Ya tengo cuenta</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="c-landing-footer">
+  <div class="c-landing-footer__container">
+    <div class="c-landing-footer__brand">
+      <span class="c-landing-footer__logo">🏠 RentaHogar</span>
+      <p class="c-landing-footer__copy">Gestión inteligente de alquileres.</p>
+    </div>
+    <nav class="c-landing-footer__links">
+      <a class="c-landing-footer__link" href="#features">Funcionalidades</a>
+      <a class="c-landing-footer__link" href="#how-it-works">Cómo funciona</a>
+      <a class="c-landing-footer__link" routerLink="/login">Acceder</a>
+      <a class="c-landing-footer__link" routerLink="/register">Registro</a>
+    </nav>
+    <p class="c-landing-footer__legal">© 2026 RentaHogar — Proyecto académico fullstack.</p>
+  </div>
+</footer>
+
+<button
+  class="c-scroll-top"
+  type="button"
+  aria-label="Subir al inicio"
+  *ngIf="showScrollTop"
+  (click)="scrollToTop()"
+>
+  ↑
+</button>
+

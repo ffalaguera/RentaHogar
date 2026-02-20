@@ -1,0 +1,98 @@
+<section class="l-page">
+  <header class="l-page__header">
+    <div>
+      <h2 class="l-page__title">Cobros</h2>
+      <p class="l-page__subtitle">Los pagos se generan automáticamente el día 1 de cada mes. Marca como cobrado cuando recibas el pago.</p>
+    </div>
+  </header>
+
+  <p *ngIf="msg()" class="g-mb-4" [style.color]="isError() ? '#c53030' : '#2f855a'" style="font-weight: 600;">
+    {{ isError() ? '❌' : '✅' }} {{ msg() }}
+  </p>
+
+  <div class="c-card g-mb-4" *ngIf="!loading()">
+    <div class="c-card__body">
+      <p class="c-form__label g-mb-2">Filtros</p>
+      <div class="l-flex l-flex--gap-4" style="flex-wrap: wrap; align-items: center;">
+        <div class="c-form__group" style="margin-bottom: 0;">
+          <label class="c-form__label" for="fMonth">Mes</label>
+          <select id="fMonth" class="c-form__select" [ngModel]="filterMonth()" (ngModelChange)="setFilterMonth($event)" name="fMonth">
+            <option [ngValue]="null">Todos</option>
+            <option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]; let i = index" [ngValue]="m">{{ monthNames[m] }}</option>
+          </select>
+        </div>
+        <div class="c-form__group" style="margin-bottom: 0;">
+          <label class="c-form__label" for="fYear">Año</label>
+          <select id="fYear" class="c-form__select" [ngModel]="filterYear()" (ngModelChange)="setFilterYear($event)" name="fYear">
+            <option [ngValue]="null">Todos</option>
+            <option *ngFor="let y of yearsList()" [ngValue]="y">{{ y }}</option>
+          </select>
+        </div>
+        <div class="c-form__group" style="margin-bottom: 0;">
+          <label class="c-form__label" for="fStatus">Estado</label>
+          <select id="fStatus" class="c-form__select" [ngModel]="filterStatus()" (ngModelChange)="setFilterStatus($event)" name="fStatus">
+            <option value="all">Todos</option>
+            <option value="pending">Pendientes</option>
+            <option value="overdue">Retraso</option>
+            <option value="paid">Cobrados</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c-card" *ngIf="!loading() && payments().length > 0">
+    <div class="c-card__body" style="overflow-x:auto;">
+      <table class="c-table">
+        <thead class="c-table__head">
+          <tr>
+            <th class="c-table__th">Inquilino</th>
+            <th class="c-table__th">Propiedad</th>
+            <th class="c-table__th">Periodo</th>
+            <th class="c-table__th">Importe</th>
+            <th class="c-table__th">Vencimiento</th>
+            <th class="c-table__th">Estado</th>
+            <th class="c-table__th">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="c-table__row" *ngFor="let p of payments()">
+            <td class="c-table__td">{{ p.tenant?.fullName || '—' }}</td>
+            <td class="c-table__td">{{ p.property?.name || '—' }}</td>
+            <td class="c-table__td">{{ monthNames[p.month] }} {{ p.year }}</td>
+            <td class="c-table__td"><strong>{{ p.amount | number:'1.2-2' }}€</strong></td>
+            <td class="c-table__td">{{ p.dueDate | date:'dd/MM/yyyy' }}</td>
+            <td class="c-table__td">
+              <span class="c-badge" [ngClass]="getStatusClass(p.status)">
+                <span class="c-badge__dot"></span>
+                {{ getStatusLabel(p.status) }}
+              </span>
+            </td>
+            <td class="c-table__td">
+              <button
+                class="c-button c-button--success c-button--sm"
+                *ngIf="p.status !== 'paid'"
+                [disabled]="saving()"
+                (click)="markAsPaid(p)"
+              >
+                Marcar como cobrado
+              </button>
+              <span *ngIf="p.status === 'paid'" style="color:#48bb78;">✓ Cobrado</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="c-empty" *ngIf="!loading() && payments().length === 0">
+    <p class="c-empty__icon">💰</p>
+    <p class="c-empty__title">Sin pagos en este periodo</p>
+    <p class="c-empty__text">Los pagos se generan automáticamente el día 1 de cada mes para todos los inquilinos activos.</p>
+  </div>
+
+  <div class="c-empty" *ngIf="loading()">
+    <p class="c-empty__icon">⏳</p>
+    <p class="c-empty__title">Cargando cobros...</p>
+  </div>
+</section>

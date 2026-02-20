@@ -1,0 +1,251 @@
+@use '../../../../scss/_utilities/variables' as *;
+@use '../../../../scss/_utilities/mixins' as *;
+
+// ── Payments sections (Retrasados, Pendientes, Cobrados) ──
+.c-payments-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.c-payments-section {
+  &__title {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    margin-bottom: 0.75rem;
+
+    &--red { color: $color-status-red; }
+    &--yellow { color: darken($color-status-yellow, 15%); }
+    &--green { color: $color-status-green; }
+  }
+
+  &__empty {
+    @include font-size('xs');
+    color: $color-text-secondary;
+    font-style: italic;
+  }
+}
+
+// ── Overdue payments list ──
+.c-overdue {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: $radius-md;
+    border-left: 4px solid transparent;
+    background: $color-gray-50;
+    transition: all $transition-fast;
+
+    @include respond-to('sm') {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0;
+    }
+
+    &--green { border-left-color: $color-status-green; }
+    &--yellow { border-left-color: $color-status-yellow; }
+    &--red { border-left-color: $color-status-red; background: rgba($color-status-red, 0.03); }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: $color-gray-800;
+    @include truncate;
+  }
+
+  &__property {
+    @include font-size('xs');
+    color: $color-text-secondary;
+    margin-top: 2px;
+  }
+
+  &__delay {
+    text-align: left;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+
+    @include respond-to('sm') {
+      text-align: right;
+      margin-left: 1rem;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+  }
+
+  &__amount {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: $color-gray-700;
+    margin-top: 4px;
+  }
+}
+
+// ── Incidents list ──
+.c-incidents {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__item {
+    padding: 0.875rem;
+    border-radius: $radius-md;
+    background: $color-gray-50;
+    border: 1px solid $color-gray-100;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: $color-gray-800;
+    @include truncate;
+  }
+
+  &__meta {
+    @include font-size('xs');
+    color: $color-text-secondary;
+    margin-top: 0.25rem;
+  }
+
+  &__actions {
+    margin-top: 0.5rem;
+  }
+
+  &__actions .c-button {
+    width: 100%;
+
+    @include respond-to('sm') {
+      width: auto;
+    }
+  }
+}
+
+// ── Properties grid (house cards) ──
+.c-properties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  @include respond-to('md') {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+.c-property-house {
+  background: $color-gray-50;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  text-align: center;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &__roof {
+    @include gradient-primary;
+    padding: 0.75rem;
+
+    @include respond-to('sm') {
+      padding: 1rem;
+    }
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 10px solid $color-secondary;
+    }
+  }
+
+  &__icon {
+    @include font-size('3xl');
+  }
+
+  &__body {
+    padding: 0.75rem 0.75rem 0.75rem;
+
+    @include respond-to('sm') {
+      padding: 1.25rem 1rem 1rem;
+    }
+  }
+
+  &__name {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: $color-gray-800;
+    @include truncate;
+  }
+
+  &__rent {
+    @include font-size('xs');
+    color: $color-primary;
+    @include font-weight('semibold');
+    margin-top: 0.25rem;
+  }
+
+  &__tenants {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__tenant-emoji {
+    @include font-size('xl');
+    cursor: default;
+    transition: transform $transition-fast;
+
+    &:hover {
+      transform: scale(1.3);
+    }
+  }
+
+  &__empty-text {
+    @include font-size('xs');
+    color: $color-gray-400;
+    font-style: italic;
+  }
+}

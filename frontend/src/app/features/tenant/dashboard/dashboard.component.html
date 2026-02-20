@@ -1,0 +1,283 @@
+<section class="l-page" *ngIf="!loading() && data()">
+  <header class="l-page__header">
+    <div>
+      <h2 class="l-page__title">Mi vivienda</h2>
+      <p class="l-page__subtitle">Resumen de tu alquiler y estado de pagos</p>
+    </div>
+  </header>
+
+  <!-- Owner & Property info -->
+  <div class="l-grid l-grid--3 g-mb-6" @cardStagger>
+    <article class="c-stat-card">
+      <div class="c-stat-card__content">
+        <p class="c-stat-card__label">Tu casero/a</p>
+        <p class="c-stat-card__value c-stat-card__value--name">{{ data()!.owner.fullName }}</p>
+      </div>
+      <div class="c-stat-card__icon" style="background: rgba(102,126,234,0.1);">👤</div>
+    </article>
+
+    <article class="c-stat-card">
+      <div class="c-stat-card__content">
+        <p class="c-stat-card__label">Alquiler mensual</p>
+        <p class="c-stat-card__value">{{ data()!.monthlyRent | number:'1.2-2' }}€</p>
+      </div>
+      <div class="c-stat-card__icon" style="background: rgba(118,75,162,0.1);">🏠</div>
+    </article>
+
+    <article class="c-stat-card">
+      <div class="c-stat-card__content">
+        <p class="c-stat-card__label">Total mensual (con facturas)</p>
+        <p class="c-stat-card__value">{{ data()!.totalMonthly | number:'1.2-2' }}€</p>
+      </div>
+      <div class="c-stat-card__icon" style="background: rgba(245,101,101,0.1);">💰</div>
+    </article>
+  </div>
+
+  <div class="l-dashboard">
+    <!-- Row 1: Información de la propiedad | Compañeros de vivienda (lado a lado) -->
+    <div class="l-dashboard__half" *ngIf="data()!.property">
+      <article class="c-card">
+        <header class="c-card__header">
+          <h3 class="c-card__title">📍 Información de la propiedad</h3>
+        </header>
+        <div class="c-card__body">
+          <div class="c-property-info">
+            <h4 class="c-property-info__name">{{ data()!.property.name }}</h4>
+            <p class="c-property-info__row">
+              <strong>Tipo:</strong> {{ getPropertyTypeLabel(data()!.property.type) }}
+            </p>
+            <p class="c-property-info__row c-property-info__address">
+              <strong>Dirección:</strong> {{ data()!.property.address.street }}, {{ data()!.property.address.city }} {{ data()!.property.address.postalCode }}
+            </p>
+            <p class="c-property-info__row" *ngIf="data()!.property.bedrooms">
+              <strong>Habitaciones:</strong> {{ data()!.property.bedrooms }} ·
+              <strong>Baños:</strong> {{ data()!.property.bathrooms }} ·
+              <strong>Superficie:</strong> {{ data()!.property.squareMeters }}m²
+            </p>
+            <p class="c-property-info__description" *ngIf="data()!.property.description">
+              {{ data()!.property.description }}
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="l-dashboard__half">
+      <article class="c-card">
+        <header class="c-card__header">
+          <h3 class="c-card__title">👥 Compañeros de vivienda</h3>
+        </header>
+        <div class="c-card__body">
+          <ul class="c-flatmate-list" *ngIf="(data()!.flatmates?.length ?? 0) > 0">
+            <li class="c-flatmate-list__item" *ngFor="let f of data()!.flatmates">
+              <span class="c-flatmate-list__name">{{ f.fullName }}</span>
+              <span class="c-flatmate-list__email" *ngIf="f.email">{{ f.email }}</span>
+              <span class="c-flatmate-list__phone" *ngIf="f.phone">{{ f.phone }}</span>
+            </li>
+          </ul>
+          <div class="c-empty" *ngIf="!data()!.flatmates?.length">
+            <p class="c-empty__icon">🏠</p>
+            <p class="c-empty__text">Vives solo/a en esta propiedad.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Row 2: Estado de pago | Incidencias (lado a lado) -->
+    <!-- Payment Status -->
+    <div class="l-dashboard__half">
+      <article
+        class="c-card"
+        [ngClass]="{
+          'c-card--status-green': data()!.paymentStatus.colorLevel === 'green',
+          'c-card--status-yellow': data()!.paymentStatus.colorLevel === 'yellow',
+          'c-card--status-red': data()!.paymentStatus.colorLevel === 'red'
+        }"
+      >
+        <header class="c-card__header">
+          <h3 class="c-card__title">Estado de pago</h3>
+          <span
+            class="c-badge"
+            [ngClass]="{
+              'c-badge--green': data()!.paymentStatus.colorLevel === 'green',
+              'c-badge--yellow': data()!.paymentStatus.colorLevel === 'yellow',
+              'c-badge--red': data()!.paymentStatus.colorLevel === 'red'
+            }"
+          >
+            <span class="c-badge__dot"></span>
+            {{ data()!.paymentStatus.status === 'paid' ? 'Al día' : data()!.paymentStatus.daysOverdue > 0 ? data()!.paymentStatus.daysOverdue + ' días de retraso' : 'Pendiente' }}
+          </span>
+        </header>
+        <div class="c-card__body">
+          <div class="c-tenant-status" *ngIf="data()!.paymentStatus.status === 'paid'">
+            <p class="c-tenant-status__icon">✅</p>
+            <p class="c-tenant-status__text">¡Estás al día con tus pagos! No tienes ningún pago pendiente.</p>
+          </div>
+          <div class="c-tenant-status" *ngIf="data()!.paymentStatus.status !== 'paid'">
+            <p class="c-tenant-status__icon" *ngIf="data()!.paymentStatus.daysOverdue <= 3">⏳</p>
+            <p class="c-tenant-status__icon" *ngIf="data()!.paymentStatus.daysOverdue > 3 && data()!.paymentStatus.daysOverdue <= 5">⚠️</p>
+            <p class="c-tenant-status__icon" *ngIf="data()!.paymentStatus.daysOverdue > 5">🚨</p>
+            <p class="c-tenant-status__text" *ngIf="data()!.paymentStatus.daysOverdue === 0">
+              Tu pago está pendiente. Realiza el pago antes de la fecha de vencimiento.
+            </p>
+            <p class="c-tenant-status__text" *ngIf="data()!.paymentStatus.daysOverdue > 0">
+              Llevas <strong>{{ data()!.paymentStatus.daysOverdue }} días</strong> de retraso en el pago. Contacta con tu casero.
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Property Incidents -->
+    <div class="l-dashboard__half">
+      <article class="c-card">
+        <header class="c-card__header">
+          <h3 class="c-card__title">Incidencias de la vivienda</h3>
+          <a routerLink="/tenant/incidents" class="c-badge c-badge--primary">Reportar nueva</a>
+        </header>
+        <div class="c-card__body">
+          <ul class="c-incident-list" *ngIf="data()!.incidents.length > 0">
+            <li class="c-incident-list__item" *ngFor="let incident of data()!.incidents">
+              <div class="c-incident-list__head">
+                <h4 class="c-incident-list__title">{{ incident.title }}</h4>
+                <span class="c-badge" [ngClass]="'c-badge--' + getStatusClass(incident.status)">
+                  {{ getStatusLabel(incident.status) }}
+                </span>
+              </div>
+              <p class="c-incident-list__meta">
+                {{ incident.tenant.fullName || 'Anónimo' }} · {{ incident.createdAt | date:'dd/MM/yyyy' }}
+              </p>
+            </li>
+          </ul>
+          <div class="c-empty" *ngIf="data()!.incidents.length === 0">
+            <p class="c-empty__icon">✨</p>
+            <p class="c-empty__title">Sin incidencias</p>
+            <p class="c-empty__text">No hay incidencias reportadas en tu vivienda.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Row 3: Facturas del mes | Variación vs mes anterior (lado a lado) -->
+    <div class="l-dashboard__half">
+      <article class="c-card">
+        <header class="c-card__header">
+          <h3 class="c-card__title">Facturas del mes</h3>
+        </header>
+        <div class="c-card__body">
+          <!-- Vista móvil: cards -->
+          <div class="c-invoice-cards g-hide-above-md" *ngIf="data()!.invoices.items.length > 0">
+            <button
+              type="button"
+              class="c-invoice-card"
+              *ngFor="let inv of data()!.invoices.items"
+              (click)="openDetailModal(inv)"
+            >
+              <div class="c-invoice-card__row">
+                <span class="c-invoice-card__label">Tipo</span>
+                <span class="c-invoice-card__value">{{ invoiceTypeLabels[inv.type] || inv.type }}</span>
+              </div>
+              <div class="c-invoice-card__row">
+                <span class="c-invoice-card__label">Periodo</span>
+                <span class="c-invoice-card__value">{{ formatPeriod(inv) }}</span>
+              </div>
+              <div class="c-invoice-card__row c-invoice-card__row--total">
+                <span class="c-invoice-card__label">Importe</span>
+                <strong class="c-invoice-card__value">{{ inv.amount | number:'1.2-2' }}€</strong>
+              </div>
+            </button>
+          </div>
+          <!-- Vista escritorio: tabla -->
+          <div class="c-card__body--scroll-x g-hide-below-md" *ngIf="data()!.invoices.items.length > 0">
+            <table class="c-table">
+              <thead class="c-table__head">
+                <tr>
+                  <th class="c-table__th">Tipo</th>
+                  <th class="c-table__th">Propiedad</th>
+                  <th class="c-table__th">Periodo</th>
+                  <th class="c-table__th">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="c-table__row c-table__row--clickable" *ngFor="let inv of data()!.invoices.items" (click)="openDetailModal(inv)">
+                  <td class="c-table__td">{{ invoiceTypeLabels[inv.type] || inv.type }}</td>
+                  <td class="c-table__td">{{ (inv.property?.name ?? data()!.property?.name) || '—' }}</td>
+                  <td class="c-table__td">{{ formatPeriod(inv) }}</td>
+                  <td class="c-table__td"><strong>{{ inv.amount | number:'1.2-2' }}€</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="c-tenant-invoice-total" *ngIf="data()!.invoices.items.length > 0">
+            <span>Total facturas</span>
+            <strong>{{ data()!.invoices.total | number:'1.2-2' }}€</strong>
+          </div>
+          <div class="c-empty" *ngIf="data()!.invoices.items.length === 0" style="padding: 1.5rem;">
+            <p class="c-empty__text">No hay facturas registradas este mes.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="l-dashboard__half">
+      <app-invoice-variation-chart></app-invoice-variation-chart>
+    </div>
+  </div>
+</section>
+
+<div class="c-empty" *ngIf="loading()" style="min-height: 60vh;">
+  <p class="c-empty__icon">⏳</p>
+  <p class="c-empty__title">Cargando tu información...</p>
+</div>
+
+<div class="c-empty" *ngIf="!loading() && !data()" style="min-height: 60vh;">
+  <p class="c-empty__icon">🏠</p>
+  <p class="c-empty__title">Sin propiedad asignada</p>
+  <p class="c-empty__text">Tu casero aún no te ha asignado a ninguna propiedad.</p>
+</div>
+
+<!-- Modal detalle factura (como el propietario) -->
+<div class="c-modal c-modal--large" *ngIf="showDetailModal() && selectedInvoice()" @modalAnimation (click)="closeDetailModal()">
+  <div class="c-modal__content invoice-detail" (click)="$event.stopPropagation()">
+    <header class="c-modal__header">
+      <h3 class="c-modal__title">Detalle de factura</h3>
+      <button class="c-button c-button--ghost c-button--sm" (click)="closeDetailModal()">✕</button>
+    </header>
+    <div class="invoice-detail__body" *ngIf="selectedInvoice() as inv">
+      <div class="invoice-detail__document">
+        <div *ngIf="inv.documentUrl as docUrl" class="invoice-detail__doc-wrapper">
+          <img *ngIf="!docUrl.toLowerCase().endsWith('.pdf')" [src]="getDocumentUrl(docUrl)" alt="Documento factura" class="invoice-detail__img" />
+          <iframe *ngIf="docUrl.toLowerCase().endsWith('.pdf')" [src]="getDocumentUrl(docUrl) | safeUrl" class="invoice-detail__iframe" title="PDF factura"></iframe>
+        </div>
+        <div *ngIf="!inv.documentUrl" class="invoice-detail__no-doc">
+          <p>📄 Sin documento adjunto</p>
+        </div>
+      </div>
+      <div class="invoice-detail__info">
+        <dl class="invoice-detail__list">
+          <dt>Tipo</dt>
+          <dd>{{ invoiceTypeLabels[inv.type] || inv.type }}</dd>
+          <dt>Propiedad</dt>
+          <dd>{{ (inv.property?.name ?? data()!.property?.name) || '—' }}</dd>
+          <dt>Periodo</dt>
+          <dd>{{ formatPeriod(inv) }}</dd>
+          <dt>Importe</dt>
+          <dd><strong>{{ inv.amount | number:'1.2-2' }}€</strong></dd>
+          <dt>Estado</dt>
+          <dd>
+            <span class="c-badge" [ngClass]="inv.isPaid ? 'c-badge--green' : 'c-badge--red'">
+              {{ inv.isPaid ? 'Pagada' : 'Pendiente' }}
+            </span>
+          </dd>
+          <ng-container *ngIf="inv.notes">
+            <dt>Notas</dt>
+            <dd>{{ inv.notes }}</dd>
+          </ng-container>
+        </dl>
+        <div class="invoice-detail__actions" *ngIf="inv.documentUrl">
+          <a [href]="getDocumentUrl(inv.documentUrl)" target="_blank" rel="noopener" class="c-button c-button--secondary c-button--sm">Abrir documento en nueva pestaña</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

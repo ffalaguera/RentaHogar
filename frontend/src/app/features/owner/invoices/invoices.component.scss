@@ -1,0 +1,106 @@
+@use '../../../../scss/_utilities/variables' as *;
+@use '../../../../scss/_utilities/mixins' as *;
+
+.c-table__row--clickable {
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.c-form__hint {
+  font-size: 0.8rem;
+  color: $color-gray-500;
+  margin-top: 0.25rem;
+}
+
+.invoice-doc-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: $color-gray-50;
+  border-radius: $radius-md;
+
+  .invoice-doc-name {
+    font-size: 0.9rem;
+    flex: 1;
+  }
+}
+
+.c-modal--large .c-modal__content {
+  max-width: 900px;
+}
+
+.invoice-detail {
+  &__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    min-height: 400px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__document {
+    background: $color-gray-50;
+    border-radius: $radius-md;
+    min-height: 350px;
+    overflow: hidden;
+  }
+
+  &__doc-wrapper {
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__img {
+    max-width: 100%;
+    max-height: 450px;
+    object-fit: contain;
+  }
+
+  &__iframe {
+    width: 100%;
+    min-height: 450px;
+    border: none;
+  }
+
+  &__no-doc {
+    @include flex-center;
+    min-height: 350px;
+    color: $color-gray-500;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1.5rem;
+
+    dt {
+      font-weight: 600;
+      color: $color-gray-600;
+    }
+
+    dd {
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+}

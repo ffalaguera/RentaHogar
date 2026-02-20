@@ -1,0 +1,179 @@
+<section class="l-page">
+  <header class="l-page__header">
+    <div>
+      <h2 class="l-page__title">Inquilinos</h2>
+      <p class="l-page__subtitle">Gestiona los inquilinos de tus propiedades</p>
+    </div>
+    <div class="l-page__actions">
+      <button class="c-button" (click)="openModal()">➕ Nuevo inquilino</button>
+    </div>
+  </header>
+
+  <!-- Toast de eliminación -->
+  <div class="c-toast" *ngIf="deleteMsg()" @fadeInOut>
+    <div class="c-toast__icon">✅</div>
+    <p class="c-toast__text">{{ deleteMsg() }}</p>
+  </div>
+
+  <div class="c-card" *ngIf="!loading() && assignments().length > 0">
+    <div class="c-card__body" style="overflow-x:auto;">
+      <table class="c-table">
+        <thead class="c-table__head">
+          <tr>
+            <th class="c-table__th">Inquilino</th>
+            <th class="c-table__th">Email</th>
+            <th class="c-table__th">Propiedad</th>
+            <th class="c-table__th">Alquiler</th>
+            <th class="c-table__th">Acciones</th>
+          </tr>
+        </thead>
+        <tbody [@tableBodyStagger]="assignments().length">
+          <tr class="c-table__row" *ngFor="let a of assignments()">
+            <td class="c-table__td">
+              <div class="l-flex l-flex--gap-3" style="align-items:center;">
+                <span class="c-avatar c-avatar--sm">{{ getInitials(a.tenant.fullName) }}</span>
+                <a [routerLink]="['/owner/tenants', a.tenant._id || a.tenant.id]" class="c-link">{{ a.tenant.fullName }}</a>
+              </div>
+            </td>
+            <td class="c-table__td">{{ a.tenant.email }}</td>
+            <td class="c-table__td">
+              {{ a.property.name || '—' }}
+              <span *ngIf="a.room" class="g-text-sm" style="color: #718096; margin-left: 0.5rem;">
+                (Hab. {{ a.room }})
+              </span>
+            </td>
+            <td class="c-table__td">
+              <strong>{{ (a.monthlyRent ?? 0) | number:'1.2-2' }}€</strong>/mes
+            </td>
+            <td class="c-table__td">
+              <button class="c-button c-button--danger c-button--sm" (click)="removeTenant(a._id)">
+                Desvincular
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="c-empty" *ngIf="!loading() && assignments().length === 0">
+    <p class="c-empty__icon">👥</p>
+    <p class="c-empty__title">Sin inquilinos</p>
+    <p class="c-empty__text">Registra inquilinos y asígnalos a tus propiedades.</p>
+    <button class="c-button" (click)="openModal()">➕ Registrar inquilino</button>
+  </div>
+</section>
+
+<!-- Register Tenant Modal -->
+<div class="c-modal" *ngIf="showModal()" @modalAnimation (click)="showModal.set(false)">
+  <div class="c-modal__content" (click)="$event.stopPropagation()">
+    <header class="c-modal__header">
+      <h3 class="c-modal__title">Registrar nuevo inquilino</h3>
+      <button class="c-button c-button--ghost c-button--sm" (click)="showModal.set(false)" *ngIf="!saving()">✕</button>
+    </header>
+    <form class="c-form" (ngSubmit)="registerTenant()">
+
+      <!-- Estado: Registrando (animación de carga) -->
+      <div *ngIf="saving()" class="c-register-loading" @fadeInOut>
+        <div class="c-register-loading__spinner"></div>
+        <p class="c-register-loading__text">Registrando inquilino...</p>
+        <p class="c-register-loading__subtext">Enviando credenciales por email</p>
+      </div>
+
+      <!-- Estado: Éxito -->
+      <div *ngIf="successMsg() && !saving()" @fadeInOut>
+        <div class="c-register-success" [class.c-register-success--error]="isError()">
+          <div class="c-register-success__icon">{{ isError() ? '❌' : '✅' }}</div>
+          <p class="c-register-success__text">{{ successMsg() }}</p>
+        </div>
+      </div>
+
+      <!-- Estado: Formulario -->
+      <ng-container *ngIf="!saving() && !successMsg()">
+        <p class="c-form__hint g-mb-4">
+          Se enviará un email al inquilino con las credenciales de acceso.
+        </p>
+        <div class="c-form__group" @slideInOut>
+          <label class="c-form__label" for="tName">Nombre completo</label>
+          <input id="tName" class="c-form__input" [(ngModel)]="form.fullName" name="fullName" placeholder="Nombre y apellidos" required />
+        </div>
+        <div class="c-form__group" @slideInOut>
+          <label class="c-form__label" for="tEmail">Correo electrónico</label>
+          <input id="tEmail" type="email" class="c-form__input" [(ngModel)]="form.email" name="email" placeholder="inquilino&#64;email.com" required />
+        </div>
+        <div class="c-form__group" @slideInOut>
+          <label class="c-form__label" for="tGender">Sexo</label>
+          <select id="tGender" class="c-form__select" [(ngModel)]="form.gender" name="gender">
+            <option value="male">Hombre</option>
+            <option value="female">Mujer</option>
+          </select>
+        </div>
+        <div class="c-form__group" @slideInOut>
+          <label class="c-form__label" for="tPhone">Teléfono</label>
+          <input
+            id="tPhone"
+            type="tel"
+            class="c-form__input"
+            [(ngModel)]="form.phone"
+            name="phone"
+            placeholder="+34 600 000 000"
+          />
+        </div>
+        <div class="c-form__group" @slideInOut>
+          <label class="c-form__label" for="tProp">Propiedad</label>
+          <select id="tProp" class="c-form__select" [(ngModel)]="form.propertyId" name="propertyId" (ngModelChange)="onPropertyChange()" required>
+            <option value="">Seleccionar propiedad...</option>
+            <option *ngFor="let p of properties()" [value]="p._id">{{ p.name }}</option>
+          </select>
+        </div>
+        <!-- Modo COMPLETO: info de reparto automático -->
+        <div class="c-form__group" *ngIf="getSelectedRentMode() === 'full'" @fadeInOut>
+          <p class="c-form__hint" style="background: rgba(102,126,234,0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid #667eea;">
+            💡 El alquiler se repartirá automáticamente entre todos los inquilinos de la propiedad.
+            <br>
+            <strong>Alquiler total:</strong> {{ getSelectedPropertyRent() | number: '1.2-2' }} € / mes
+            — <strong>Le corresponderá:</strong> {{ getSuggestedFullRent() | number: '1.2-2' }} € / mes
+          </p>
+        </div>
+
+        <!-- Modo POR HABITACIONES: elegir habitación y usar su alquiler -->
+        <div class="c-form__group" *ngIf="getSelectedRentMode() === 'rooms'" @fadeInOut>
+          <label class="c-form__label" for="tRoom">Habitación</label>
+          <select
+            id="tRoom"
+            class="c-form__select"
+            [(ngModel)]="form.room"
+            name="room"
+            (ngModelChange)="onRoomChange($event)"
+            required
+          >
+            <option [ngValue]="null">Seleccionar habitación...</option>
+            <option *ngFor="let room of getAvailableRooms()" [ngValue]="room">
+              Habitación {{ room }}
+            </option>
+          </select>
+          <p class="c-form__hint" *ngIf="getSelectedProperty()?.roomRents?.length">
+            El alquiler de la habitación seleccionada se rellenará automáticamente si está configurado en la propiedad.
+          </p>
+          <label class="c-form__label" for="tRentRoom" style="margin-top: 0.75rem;">Alquiler mensual que pagará el inquilino (€)</label>
+          <input
+            id="tRentRoom"
+            type="number"
+            class="c-form__input"
+            [(ngModel)]="form.monthlyRent"
+            name="monthlyRentRoom"
+            min="0"
+            placeholder="Ej: 400"
+            required
+          />
+        </div>
+        <div class="c-form__actions">
+          <button type="button" class="c-button c-button--secondary" (click)="showModal.set(false)">Cancelar</button>
+          <button type="submit" class="c-button" [disabled]="saving()">
+            Registrar y enviar email
+          </button>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+# Carpeta antigua (backend y frontend ya están en la raíz)
+rental-management/
+
+# Dependencias y builds
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+backend/dist/
+frontend/dist/
+
+# Entorno y secretos
+.env
+.env.local
+.env.*.local
+backend/.env
+backend/uploads/
+
+# Logs y caché
+*.log
+backend/logs/
+frontend/.angular/
+
+# Sistema e IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

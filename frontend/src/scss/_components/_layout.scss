@@ -1,0 +1,187 @@
+@use '../_utilities/variables' as *;
+@use '../_utilities/mixins' as *;
+
+// ── Flex layout ──
+.l-flex {
+  display: flex;
+
+  &--center { @include flex-center; }
+  &--between { @include flex-between; }
+  &--column { @include flex-column; }
+  &--wrap { flex-wrap: wrap; }
+  &--gap-1 { gap: 0.25rem; }
+  &--gap-2 { gap: 0.5rem; }
+  &--gap-3 { gap: 0.75rem; }
+  &--gap-4 { gap: 1rem; }
+  &--gap-6 { gap: 1.5rem; }
+  &--gap-8 { gap: 2rem; }
+  &--align-start { align-items: flex-start; }
+  &--align-end { align-items: flex-end; }
+}
+
+// ── Grid layout ──
+.l-grid {
+  display: grid;
+  gap: 1.5rem;
+
+  &--2 {
+    grid-template-columns: 1fr;
+    @include respond-to('md') { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  &--3 {
+    grid-template-columns: 1fr;
+    @include respond-to('md') { grid-template-columns: repeat(2, 1fr); }
+    @include respond-to('lg') { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  &--4 {
+    grid-template-columns: 1fr;
+    @include respond-to('sm') { grid-template-columns: repeat(2, 1fr); }
+    @include respond-to('lg') { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  &--auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+// ── Page layout ──
+.l-page {
+  padding: 1rem;
+  max-width: 100%;
+  overflow-x: hidden;
+
+  @include respond-to('sm') {
+    padding: 1.25rem;
+  }
+
+  @include respond-to('lg') {
+    padding: 2rem;
+  }
+
+  &__header {
+    @include flex-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    @include font-size('xl');
+    @include font-weight('bold');
+    line-height: 1.3;
+    word-break: break-word;
+    color: $color-gray-800;
+
+    @include respond-to('sm') {
+      @include font-size('2xl');
+    }
+  }
+
+  &__subtitle {
+    @include font-size('sm');
+    color: $color-text-secondary;
+    margin-top: 0.25rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+}
+
+// ── Dashboard grid ──
+.l-dashboard {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  &__full { grid-column: 1 / -1; }
+
+  &__half {
+    grid-column: 1 / -1;
+    @include respond-to('lg') { grid-column: span 6; }
+  }
+
+  &__third {
+    grid-column: 1 / -1;
+    @include respond-to('lg') { grid-column: span 4; }
+  }
+
+  &__quarter {
+    grid-column: 1 / -1;
+    @include respond-to('lg') { grid-column: span 3; }
+  }
+
+  &__two-thirds {
+    grid-column: 1 / -1;
+    @include respond-to('lg') { grid-column: span 8; }
+  }
+}
+
+// ── Main app layout ──
+.l-app {
+  display: flex;
+  min-height: 100vh;
+
+  &__sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: $z-sidebar;
+    transition: transform $transition-base;
+
+    @include respond-below('lg') {
+      transform: translateX(-100%);
+
+      &--open {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  &__main {
+    flex: 1;
+    margin-left: 0;
+    min-width: 0;
+
+    @include respond-to('lg') {
+      margin-left: 260px;
+    }
+  }
+
+  &__content {
+    position: relative;
+    padding-top: 64px;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  &__overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: $z-sidebar - 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    @include respond-below('lg') {
+      display: block;
+      &--visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+}

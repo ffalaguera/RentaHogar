@@ -1,0 +1,123 @@
+<header class="c-navbar" (clickOutside)="closeDropdowns()">
+  <div class="c-navbar__left">
+    <button class="c-navbar__hamburger g-hide-above-lg" (click)="toggleSidebar()" aria-label="Abrir menú">
+      <span class="c-navbar__hamburger-line"></span>
+      <span class="c-navbar__hamburger-line"></span>
+      <span class="c-navbar__hamburger-line"></span>
+    </button>
+    <h1 class="c-navbar__brand">🏠 RentaHogar</h1>
+  </div>
+
+  <div class="c-navbar__center" *ngIf="authService.isOwner()">
+    <div class="c-navbar__search">
+      <span class="c-navbar__search-icon">🔍</span>
+      <input
+        type="search"
+        class="c-navbar__search-input"
+        placeholder="Buscar inquilino..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearch()"
+        (keydown.enter)="onEnterKey()"
+        (focus)="searchQuery.length >= 2 && showSearch.set(true)"
+        (blur)="handleSearchBlur()"
+        aria-label="Buscar inquilino"
+      />
+      <div class="c-navbar__search-results" *ngIf="showSearch() && searchQuery.length >= 2" @fadeInOut>
+        <div class="c-navbar__search-section" *ngIf="searchResults() && searchResults()!.tenants.length > 0" [@listStagger]="searchResults()!.tenants.length">
+          <p class="c-navbar__search-label">Inquilinos</p>
+          <div
+            class="c-navbar__search-item"
+            *ngFor="let tenant of searchResults()!.tenants; let i = index"
+            (mousedown)="goToTenant(tenant); $event.preventDefault()"
+            [class.c-navbar__search-item--highlighted]="highlightedIndex() === i"
+          >
+            <span>👤</span>
+            <div>
+              <p class="c-navbar__search-name">{{ tenant.fullName }}</p>
+              <p class="c-navbar__search-detail">{{ tenant.email }}</p>
+            </div>
+          </div>
+        </div>
+        <p class="c-navbar__search-empty" *ngIf="searchResults() && searchResults()!.tenants.length === 0 && !searching()">
+          No se ha encontrado ningún inquilino
+        </p>
+        <p class="c-navbar__search-empty" *ngIf="searching()">
+          Buscando...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="c-navbar__right" aria-label="Acciones de usuario">
+    <!-- Notifications -->
+    <div class="c-navbar__action" *ngIf="authService.isOwner()">
+      <button
+        class="c-navbar__icon-btn"
+        (click)="toggleNotifications()"
+        [attr.aria-label]="'Notificaciones (' + notificationService.unreadCount() + ' sin leer)'"
+      >
+        <span class="c-navbar__bell">🔔</span>
+        <span class="c-navbar__badge" *ngIf="notificationService.unreadCount() > 0">
+          {{ notificationService.unreadCount() }}
+        </span>
+      </button>
+
+      <div class="c-navbar__dropdown c-navbar__dropdown--notifications" *ngIf="showNotifications()" @slideInOut>
+        <div class="c-navbar__dropdown-header">
+          <h3>Notificaciones</h3>
+          <button class="c-navbar__link" (click)="markAllRead()">Marcar todo leído</button>
+        </div>
+        <div class="c-navbar__dropdown-body">
+          <div
+            class="c-navbar__notification"
+            *ngFor="let n of notifications()"
+            [class.c-navbar__notification--unread]="!n.isRead"
+            (click)="markAsRead(n)"
+          >
+            <span class="c-navbar__notification-icon">
+              {{ n.type === 'incident' ? '⚠️' : n.type === 'payment' ? '💰' : '📢' }}
+            </span>
+            <div class="c-navbar__notification-content">
+              <p class="c-navbar__notification-title">{{ n.title }}</p>
+              <p class="c-navbar__notification-message">{{ n.message }}</p>
+            </div>
+          </div>
+          <p class="c-navbar__dropdown-empty" *ngIf="notifications().length === 0">
+            No tienes notificaciones
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User menu -->
+    <div class="c-navbar__action">
+      <button class="c-navbar__avatar-btn" (click)="toggleUserMenu()" aria-label="Menú de usuario">
+        <span class="c-avatar c-avatar--sm" [style.background-image]="getAvatarUrl() ? 'url(' + getAvatarUrl() + ')' : ''" [style.background-size]="'cover'" [style.background-position]="'center'">
+          <span *ngIf="!getAvatarUrl()">{{ getInitials() }}</span>
+        </span>
+      </button>
+
+      <div class="c-navbar__dropdown c-navbar__dropdown--user" *ngIf="showUserMenu()" @slideInOut>
+        <div class="c-navbar__user-info">
+          <span class="c-avatar" [style.background-image]="getAvatarUrl() ? 'url(' + getAvatarUrl() + ')' : ''" [style.background-size]="'cover'" [style.background-position]="'center'">
+            <span *ngIf="!getAvatarUrl()">{{ getInitials() }}</span>
+          </span>
+          <div>
+            <p class="c-navbar__user-name">{{ authService.user()?.fullName }}</p>
+            <p class="c-navbar__user-role">{{ authService.isOwner() ? 'Propietario' : 'Inquilino' }}</p>
+          </div>
+        </div>
+        <hr class="c-navbar__divider" />
+        <button
+          class="c-navbar__menu-item"
+          (click)="router.navigate([authService.isOwner() ? '/owner/profile' : '/tenant/profile']); closeDropdowns()"
+        >
+          👤 Mi Perfil
+        </button>
+        <button class="c-navbar__menu-item c-navbar__menu-item--danger" (click)="logout()">
+          🚪 Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>

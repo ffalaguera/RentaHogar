@@ -1,0 +1,396 @@
+@use '../../../../scss/_utilities/variables' as *;
+@use '../../../../scss/_utilities/mixins' as *;
+
+// ── Stat cards en dashboard inquilino (nombres largos) ──
+:host .c-stat-card__value {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+:host .c-stat-card__value--name {
+  @include font-size('lg');
+  @include respond-to('sm') {
+    font-size: 1.25rem;
+  }
+}
+
+// ── Información de propiedad responsive ──
+.c-property-info {
+  &__name {
+    @include font-size('lg');
+    @include font-weight('semibold');
+    color: $color-gray-800;
+    margin-bottom: 0.5rem;
+    word-break: break-word;
+  }
+
+  &__row {
+    @include font-size('sm');
+    color: $color-text-secondary;
+    margin-bottom: 0.25rem;
+    word-break: break-word;
+  }
+
+  &__address {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  &__description {
+    @include font-size('sm');
+    color: $color-text-secondary;
+    margin-top: 0.75rem;
+    word-break: break-word;
+    line-height: 1.5;
+  }
+}
+
+.c-tenant-status {
+  text-align: center;
+  padding: 1rem;
+
+  @include respond-to('sm') {
+    padding: 1.5rem;
+  }
+
+  &__icon {
+    @include font-size('3xl');
+    margin-bottom: 0.5rem;
+
+    @include respond-to('sm') {
+      @include font-size('4xl');
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  &__text {
+    @include font-size('xs');
+    color: $color-gray-600;
+    max-width: 100%;
+    margin: 0 auto;
+    line-height: 1.6;
+    word-break: break-word;
+
+    @include respond-to('sm') {
+      @include font-size('sm');
+      max-width: 360px;
+    }
+  }
+}
+
+.c-invoice-list {
+  display: flex;
+  flex-direction: column;
+
+  &__item {
+    @include flex-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid $color-gray-100;
+    @include font-size('sm');
+    color: $color-gray-700;
+  }
+
+  &__total {
+    @include flex-between;
+    padding: 0.875rem 0 0;
+    margin-top: 0.25rem;
+    border-top: 2px solid $color-gray-200;
+    @include font-size('base');
+    @include font-weight('bold');
+    color: $color-gray-800;
+  }
+
+  &--large &__item {
+    padding: 1rem 0;
+    @include font-size('base');
+  }
+
+  &--large &__total {
+    padding: 1.25rem 0 0;
+    margin-top: 0.5rem;
+    @include font-size('lg');
+  }
+}
+
+.c-flatmate-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  &__name {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: $color-gray-800;
+    word-break: break-word;
+  }
+
+  &__email,
+  &__phone {
+    @include font-size('xs');
+    color: $color-gray-600;
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+}
+
+.c-incident-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__item {
+    padding: 0.75rem;
+    border: 1px solid $color-gray-100;
+    border-radius: $radius-md;
+    background: $color-gray-50;
+  }
+
+  &__head {
+    @include flex-between;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  &__title {
+    @include font-size('sm');
+    @include font-weight('semibold');
+    color: $color-gray-800;
+    margin: 0;
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  &__meta {
+    @include font-size('xs');
+    color: $color-gray-600;
+    margin: 0.25rem 0 0;
+  }
+}
+
+.c-table__row--clickable {
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+// ── Vista móvil: facturas como cards ──
+.c-invoice-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.c-invoice-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  background: $color-gray-50;
+  cursor: pointer;
+  transition: background $transition-fast, box-shadow $transition-fast;
+
+  &:hover,
+  &:focus-visible {
+    background: $color-white;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.c-invoice-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  @include font-size('sm');
+  margin-bottom: 0.25rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &--total {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid $color-gray-200;
+    @include font-size('base');
+  }
+}
+
+.c-invoice-card__label {
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.c-invoice-card__value {
+  color: $color-gray-800;
+  word-break: break-word;
+  text-align: right;
+}
+
+// ── Card body con scroll horizontal para tablas ──
+.c-card__body--scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// ── Tabla facturas responsive (dashboard inquilino) ──
+:host .c-table {
+  min-width: 420px;
+
+  .c-table__th,
+  .c-table__td {
+    padding: 0.5rem;
+
+    @include respond-to('sm') {
+      padding: 0.75rem 1rem;
+    }
+  }
+}
+
+.c-tenant-invoice-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0;
+  padding-top: 1rem;
+  @include font-size('base');
+  @include font-weight('bold');
+  color: $color-gray-800;
+}
+
+.c-card--large {
+  padding: 1.5rem;
+
+  .c-card__title {
+    @include font-size('xl');
+  }
+}
+
+// Modal detalle factura (mismo diseño que propietario)
+.c-modal--large .c-modal__content {
+  max-width: calc(100vw - 2rem);
+  margin: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+
+  @include respond-to('md') {
+    max-width: 900px;
+    margin: 2rem auto;
+  }
+}
+
+.invoice-detail {
+  &__body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    min-height: 300px;
+
+    @include respond-to('md') {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      min-height: 400px;
+    }
+  }
+
+  &__document {
+    background: $color-gray-50;
+    border-radius: $radius-md;
+    min-height: 250px;
+
+    @include respond-to('md') {
+      min-height: 350px;
+    }
+    overflow: hidden;
+  }
+
+  &__doc-wrapper {
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+
+    @include respond-to('md') {
+      min-height: 350px;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+
+    @include respond-to('md') {
+      max-height: 450px;
+    }
+  }
+
+  &__iframe {
+    width: 100%;
+    min-height: 300px;
+
+    @include respond-to('md') {
+      min-height: 450px;
+    }
+    border: none;
+  }
+
+  &__no-doc {
+    @include flex-center;
+    min-height: 250px;
+
+    @include respond-to('md') {
+      min-height: 350px;
+    }
+    color: $color-gray-500;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1.5rem;
+
+    dt {
+      font-weight: 600;
+      color: $color-gray-600;
+    }
+
+    dd {
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+}
