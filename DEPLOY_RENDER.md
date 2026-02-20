@@ -54,7 +54,19 @@ Esta guía te lleva paso a paso para desplegar el backend, frontend y base de da
 
 ---
 
-## Paso 2: Preparar el repositorio
+## Paso 2: Conectar el repositorio a Render
+
+### Opción A: Blueprint (recomendado, más rápido)
+
+El proyecto incluye un archivo `render.yaml` en la raíz. Para desplegar:
+
+1. Entra en [Render Dashboard](https://dashboard.render.com)
+2. **New +** → **Blueprint**
+3. Conecta tu repositorio `ffalaguera/RentaHogar`
+4. Render detectará `render.yaml` y creará el servicio con la configuración predefinida
+5. Te pedirá los valores de `DATABASE_URL`, `FRONTEND_URL`, `SMTP_USER` y `SMTP_PASS` (marca `sync: false`)
+
+### Opción B: Manual
 
 Asegúrate de que tu proyecto esté en GitHub/GitLab y que la estructura sea:
 

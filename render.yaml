@@ -1,0 +1,38 @@
+# Render Blueprint - RentaHogar
+# Conecta este repo en dashboard.render.com -> New -> Blueprint
+
+services:
+  - type: web
+    runtime: node
+    name: rentahogar-api
+    region: frankfurt
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: "7d"
+      # Añade estas variables en el Dashboard de Render tras crear el servicio:
+      # - DATABASE_URL (si usas Neon/Supabase) o DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
+      # - FRONTEND_URL (URL de tu Static Site, ej: https://rentahogar.onrender.com)
+      # - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS (para emails)
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
