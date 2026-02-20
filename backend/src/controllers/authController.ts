@@ -201,12 +201,12 @@ export const deleteAccount = async (
     for (const tid of tenantIds) {
       const other = await TenantAssignment.find({ tenant: tid });
       if (other.length === 0) {
-        await User.findByIdAndDelete(tid);
+        await User.findByIdAndDelete(String(tid));
       }
     }
 
     await Property.deleteMany({ owner: ownerId });
-    await User.findByIdAndDelete(ownerId);
+    await User.findByIdAndDelete(String(ownerId));
 
     logger.info(`Cuenta de propietario eliminada: ${ownerId}`);
     return res.status(200).json({ success: true, message: 'Cuenta eliminada correctamente.' });

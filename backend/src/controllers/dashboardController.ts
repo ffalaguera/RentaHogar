@@ -128,9 +128,9 @@ export const getTenantDashboard = async (
       incidentRows.map(async (row: any) => {
         const inc = row.toJSON();
         inc._id = inc.id;
-        const tenantUser = await UserModel.findByPk(row.tenant, { attributes: ['fullName'] });
+        const tenantUser = await UserModel.findByPk(row.tenant, { attributes: ['id', 'fullName'] });
         inc.tenant = tenantUser
-          ? { fullName: tenantUser.fullName, id: tenantUser.id, _id: tenantUser.id }
+          ? { fullName: tenantUser.get('fullName'), id: tenantUser.get('id'), _id: tenantUser.get('id') }
           : null;
         return inc;
       }),
