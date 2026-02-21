@@ -1,4 +1,4 @@
-# RentaHogar
+# 🏠 RentaHogar
 
 ## 1. Resumen ejecutivo
 
