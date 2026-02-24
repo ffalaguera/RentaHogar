@@ -41,6 +41,7 @@ const seedData = async (): Promise<void> => {
       password: '123456',
       role: 'owner',
       phone: '+34 612 345 678',
+      gender: 'male',
     });
 
     const owner2: any = await User.create({
@@ -49,6 +50,7 @@ const seedData = async (): Promise<void> => {
       password: '123456',
       role: 'owner',
       phone: '+34 623 456 789',
+      gender: 'female',
     });
 
     // ── Propiedades ──
@@ -139,15 +141,15 @@ const seedData = async (): Promise<void> => {
     // ── Inquilinos ──
     console.log('🧑‍🤝‍🧑 Creando inquilinos...');
     const tenants: any[] = [];
-    const tenantData: [string, string, string, string][] = [
-      ['Ana Martínez Sánchez', 'ana@demo.com', '+34 634 567 890', owner1._id],
-      ['Pedro Jiménez Torres', 'pedro@demo.com', '+34 645 678 901', owner1._id],
-      ['Laura Rodríguez Gómez', 'laura@demo.com', '+34 656 789 012', owner1._id],
-      ['Miguel Ángel Díaz', 'miguel@demo.com', '+34 667 890 123', owner2._id],
-      ['Sofia Navarro Pérez', 'sofia@demo.com', '+34 678 901 234', owner2._id],
+    const tenantData: [string, string, string, string, 'male' | 'female'][] = [
+      ['Ana Martínez Sánchez', 'ana@demo.com', '+34 634 567 890', owner1._id, 'female'],
+      ['Pedro Jiménez Torres', 'pedro@demo.com', '+34 645 678 901', owner1._id, 'male'],
+      ['Laura Rodríguez Gómez', 'laura@demo.com', '+34 656 789 012', owner1._id, 'female'],
+      ['Miguel Ángel Díaz', 'miguel@demo.com', '+34 667 890 123', owner2._id, 'male'],
+      ['Sofia Navarro Pérez', 'sofia@demo.com', '+34 678 901 234', owner2._id, 'female'],
     ];
 
-    for (const [name, email, phone, registeredBy] of tenantData) {
+    for (const [name, email, phone, registeredBy, gender] of tenantData) {
       const t = await User.create({
         fullName: name,
         email,
@@ -155,6 +157,7 @@ const seedData = async (): Promise<void> => {
         role: 'tenant',
         phone,
         registeredBy,
+        gender,
       });
       tenants.push(t);
     }
