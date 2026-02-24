@@ -1,4 +1,4 @@
-# Product Requirements Document (PRD) - RentaHogar
+# 🏠 RentaHogar
 
 ## 1. Resumen ejecutivo
 
