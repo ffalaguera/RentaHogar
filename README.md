@@ -1,4 +1,4 @@
-# 🏠 RentaHogar
+# Product Requirements Document (PRD) - RentaHogar
 
 ## 1. Resumen ejecutivo
 
@@ -301,3 +301,117 @@ flowchart TB
 - [Backend README](backend/README.md): Endpoints API, scripts, configuración
 - [Frontend features](frontend/src/app/features): Estructura de módulos
 - [Core models](frontend/src/app/core/models/interfaces.ts): Interfaces TypeScript
+
+---
+
+## 14. Manual de usuario – Arrancar en local
+
+Guía para que otra persona pueda ejecutar la aplicación en su máquina.
+
+### Requisitos previos
+
+- **Node.js** >= 18
+- **PostgreSQL** instalado y en ejecución
+- **npm** (incluido con Node.js)
+
+### Paso 1: Clonar el repositorio
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd rental-management
+```
+
+### Paso 2: Crear la base de datos en PostgreSQL
+
+Crear la base de datos manualmente:
+
+```bash
+# Con psql o un cliente gráfico (pgAdmin, DBeaver, etc.)
+CREATE DATABASE rental_management;
+```
+
+### Paso 3: Configurar el backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+
+Editar el archivo `.env` con tus datos:
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `DB_HOST` | Host de PostgreSQL | `127.0.0.1` |
+| `DB_PORT` | Puerto | `5432` |
+| `DB_NAME` | Nombre de la BD | `rental_management` |
+| `DB_USER` | Usuario | `postgres` |
+| `DB_PASS` | Contraseña | tu contraseña |
+| `JWT_SECRET` | Secreto para JWT | cualquier string largo y seguro |
+| `FRONTEND_URL` | URL del frontend | `http://localhost:4200` |
+
+### Paso 4: Crear tablas y datos de prueba
+
+```bash
+npm run setup:schema
+npm run seed:reset
+```
+
+### Paso 5: Iniciar el backend
+
+```bash
+npm run dev
+```
+
+El API quedará disponible en **http://localhost:3000**.
+
+### Paso 6: Configurar e iniciar el frontend
+
+En **otra terminal**:
+
+```bash
+cd frontend
+npm install
+ng serve
+```
+
+O bien:
+
+```bash
+npm start
+```
+
+El frontend quedará disponible en **http://localhost:4200**.
+
+### Resumen de comandos (orden de ejecución)
+
+| Orden | Comando | Dónde | Descripción |
+|-------|---------|-------|-------------|
+| 1 | `cd backend` | raíz del proyecto | Entrar al backend |
+| 2 | `npm install` | backend | Instalar dependencias |
+| 3 | `cp .env.example .env` | backend | Crear archivo de entorno |
+| 4 | *(editar .env)* | backend | Configurar BD, JWT, etc. |
+| 5 | `npm run setup:schema` | backend | Crear tablas |
+| 6 | `npm run seed:reset` | backend | Cargar datos de prueba |
+| 7 | `npm run dev` | backend | Iniciar API (puerto 3000) |
+| 8 | `cd frontend` | nueva terminal | Entrar al frontend |
+| 9 | `npm install` | frontend | Instalar dependencias |
+| 10 | `ng serve` o `npm start` | frontend | Iniciar app (puerto 4200) |
+
+### Credenciales de prueba (tras el seed)
+
+| Rol | Email | Contraseña |
+|-----|-------|------------|
+| Propietario | carlos@demo.com | 123456 |
+| Propietario | maria@demo.com | 123456 |
+| Inquilino | ana@demo.com | 123456 |
+| Inquilino | pedro@demo.com | 123456 |
+| Inquilino | laura@demo.com | 123456 |
+| Inquilino | miguel@demo.com | 123456 |
+| Inquilino | sofia@demo.com | 123456 |
+
+### Problemas frecuentes
+
+- **"No se pudo conectar con el servidor"**: Comprueba que el backend está en marcha (`npm run dev` en `backend/`).
+- **Error de conexión a PostgreSQL**: Verifica que PostgreSQL está en ejecución y que `DB_HOST`, `DB_USER`, `DB_PASS` en `.env` son correctos.
+- **CORS**: El frontend debe estar en `http://localhost:4200` y `FRONTEND_URL` en `.env` debe coincidir.
