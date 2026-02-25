@@ -1,5 +1,7 @@
 # 🏠 RentaHogar
 
+![Landing page](capturas%20RentaHogar/Landing-page.png)
+
 ## 1. Resumen ejecutivo
 
 **RentaHogar** es una aplicación web para la gestión integral de propiedades en alquiler. Permite a los propietarios centralizar la administración de inmuebles, inquilinos, pagos, facturas e incidencias; y a los inquilinos consultar su estado de pagos, facturas y reportar incidencias desde su propio portal.
@@ -30,10 +32,12 @@ Los inquilinos, por su parte, necesitan:
 
 ## 3. Visión del producto
 
+![Cómo funciona](capturas%20RentaHogar/como_funciona.png)
+
 Proporcionar una plataforma única donde propietarios e inquilinos gestionan el ciclo completo del alquiler de forma sencilla, transparente y profesional, con notificaciones automáticas y acceso 24/7.
 
 ---
-![Landing page](Landing-page.png)
+
 ## 4. Objetivos y métricas de éxito
 
 | Objetivo | Métrica |
@@ -65,6 +69,8 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 ## 6. Funcionalidades por rol
 
+![Funcionalidades](capturas%20RentaHogar/funcionalidades.png)
+
 ### 6.1 Propietario
 
 | Funcionalidad | Descripción | Estado |
@@ -80,6 +86,17 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 | Perfil | Ver y editar datos personales | Implementado |
 | Eliminar cuenta | Borrado de cuenta de usuario | Implementado |
 
+**Capturas del portal propietario:**
+
+![Dashboard propietario](capturas%20RentaHogar/Dashboard_propietario.png)
+![Propiedades](capturas%20RentaHogar/propiedades.png)
+![Inquilinos](capturas%20RentaHogar/inquilinos.png)
+![Formulario nuevo inquilino](capturas%20RentaHogar/formulario_nuevo_inquilino.png)
+![Cobros](capturas%20RentaHogar/cobros.png)
+![Facturas](capturas%20RentaHogar/facturas.png)
+![Incidencias](capturas%20RentaHogar/incidencias.png)
+![Perfil](capturas%20RentaHogar/Perfil.png)
+
 ### 6.2 Inquilino
 
 | Funcionalidad | Descripción | Estado |
@@ -91,11 +108,19 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 | Incidencias | Ver incidencias de la vivienda, reportar nueva (envío email al propietario) | Implementado |
 | Perfil | Ver y editar datos personales | Implementado |
 
+**Capturas del portal inquilino:**
+
+![Dashboard inquilino](capturas%20RentaHogar/dashboard_inquilino.png)
+
 ---
 
 ## 7. Requisitos funcionales detallados
 
 ### 7.1 Autenticación y autorización
+
+![Portales](capturas%20RentaHogar/portales.png)
+![Registro](capturas%20RentaHogar/registro.png)
+![Inicio de sesión](capturas%20RentaHogar/inicio_sesion.png)
 
 - Registro solo como propietario (email, contraseña, nombre)
 - Login con JWT; token en header Authorization
@@ -105,6 +130,8 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 - Eliminación de cuenta con borrado de datos asociados
 
 ### 7.2 Propiedades
+
+![Formulario nueva propiedad](capturas%20RentaHogar/formulario_nueva_propiedad.png)
 
 - Tipos: apartamento, casa, estudio, habitación, local comercial
 - Dirección: calle, ciudad, código postal, país opcional
@@ -121,6 +148,8 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 ### 7.4 Facturas
 
+![Formulario nueva factura](capturas%20RentaHogar/formulario_nueva_factura.png)
+
 - Tipos: water, gas, electricity, internet, community, insurance, other
 - Periodo: `periodStart` / `periodEnd` (mes, año)
 - Documento adjunto opcional (subida Multer)
@@ -128,6 +157,8 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 - Inquilinos ven facturas de su propiedad
 
 ### 7.5 Incidencias
+
+![Formulario incidencias](capturas%20RentaHogar/formulario_incidencias.png)
 
 - Tipos: plumbing, electrical, structural, appliance, heating, pest, other
 - Prioridades: low, medium, high, urgent
