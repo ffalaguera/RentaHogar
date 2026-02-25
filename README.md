@@ -10,6 +10,8 @@
 - **Estado**: Implementado y operativo
 
 ---
+##Landing-page
+![Landing-page](Landing-page.jpg)
 
 ## 2. Declaración del problema
 
