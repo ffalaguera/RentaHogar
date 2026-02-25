@@ -10,8 +10,6 @@
 - **Estado**: Implementado y operativo
 
 ---
-##Landing-page
-![Landing-page](Landing-page.jpg)
 
 ## 2. Declaración del problema
 
@@ -35,7 +33,7 @@ Los inquilinos, por su parte, necesitan:
 Proporcionar una plataforma única donde propietarios e inquilinos gestionan el ciclo completo del alquiler de forma sencilla, transparente y profesional, con notificaciones automáticas y acceso 24/7.
 
 ---
-
+![Landing page](capturas%20RentaHogar/Landing-page.png)
 ## 4. Objetivos y métricas de éxito
 
 | Objetivo | Métrica |
