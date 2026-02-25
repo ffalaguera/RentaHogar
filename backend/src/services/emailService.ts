@@ -3,12 +3,9 @@ import sgMail from '@sendgrid/mail';
 import logger from '../utils/logger';
 
 // Usar SendGrid API si está configurado (recomendado para producción/Render)
-const useSendGridApi = !!process.env.SENDGRID_API_KEY;
-const fromEmail = process.env.SENDGRID_FROM_EMAIL || process.env.SMTP_USER || 'noreply@rentahogar.com';
-
-if (useSendGridApi) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-}
+const useSendGridApi = () => !!process.env.SENDGRID_API_KEY;
+const fromEmail = () =>
+  process.env.SENDGRID_FROM_EMAIL || process.env.SMTP_USER || 'noreply@rentahogar.com';
 
 const createTransporter = () => {
   const port = parseInt(process.env.SMTP_PORT || '587', 10);
@@ -24,9 +21,12 @@ const createTransporter = () => {
 };
 
 const sendViaSendGrid = async (to: string, subject: string, html: string) => {
+  const key = process.env.SENDGRID_API_KEY;
+  if (!key) throw new Error('SENDGRID_API_KEY no configurado');
+  sgMail.setApiKey(key);
   const msg = {
     to,
-    from: { name: 'RentaHogar', email: fromEmail },
+    from: { name: 'RentaHogar', email: fromEmail() },
     subject,
     html,
   };
@@ -37,7 +37,7 @@ const sendViaSendGrid = async (to: string, subject: string, html: string) => {
 const sendViaSmtp = async (to: string, subject: string, html: string) => {
   const transporter = createTransporter();
   const info = await transporter.sendMail({
-    from: `"RentaHogar" <${fromEmail}>`,
+    from: `"RentaHogar" <${fromEmail()}>`,
     to,
     subject,
     html,
@@ -87,7 +87,7 @@ export const sendWelcomeTenantEmail = async (
   `;
 
   try {
-    if (useSendGridApi) {
+    if (useSendGridApi()) {
       const res = await sendViaSendGrid(tenantEmail, subject, html);
       const msgId = (res as any)?.headers?.['x-message-id'] || 'ok';
       logger.info(`Email de bienvenida enviado a ${tenantEmail} (SendGrid): ${msgId}`);
@@ -134,7 +134,7 @@ export const sendIncidentNotificationEmail = async (
   `;
 
   try {
-    if (useSendGridApi) {
+    if (useSendGridApi()) {
       const res = await sendViaSendGrid(ownerEmail, subject, html);
       const msgId = (res as any)?.headers?.['x-message-id'] || 'ok';
       logger.info(`Email de incidencia enviado a ${ownerEmail} (SendGrid): ${msgId}`);

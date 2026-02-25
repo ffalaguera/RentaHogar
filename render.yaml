@@ -4,7 +4,7 @@
 services:
   - type: web
     runtime: node
-    name: rentahogar-api
+    name: RentaHogar
     region: frankfurt
     plan: free
     rootDir: backend
