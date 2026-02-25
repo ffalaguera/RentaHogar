@@ -19,7 +19,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      // No hacer logout en 401 de login/register (credenciales incorrectas)
+      const isAuthRequest = req.url.includes('/auth/login') || req.url.includes('/auth/register');
+      if (error.status === 401 && !isAuthRequest) {
         authService.logout();
         router.navigate(['/login']);
       }

@@ -43,11 +43,17 @@ export class LoginComponent {
       },
       error: (err) => {
         this.loading.set(false);
-        const msg =
-          err.error?.message ||
-          (err.status === 0 || err.message === 'Http failure response for unknown url'
-            ? 'No se pudo conectar con el servidor. Comprueba que el backend esté en marcha (puerto 3000).'
-            : 'Error al iniciar sesión.');
+        let msg = err.error?.message;
+        if (!msg) {
+          if (err.status === 0 || err.message?.includes('Http failure') || err.message?.includes('Unknown Error')) {
+            msg =
+              'No se pudo conectar con el servidor. Si usas la versión desplegada, el backend puede tardar 30-60 segundos en activarse (plan gratuito). Intenta de nuevo.';
+          } else if (err.status === 401) {
+            msg = 'Credenciales incorrectas. Verifica el email y la contraseña.';
+          } else {
+            msg = 'Error al iniciar sesión. Intenta de nuevo.';
+          }
+        }
         this.error.set(msg);
       },
     });

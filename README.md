@@ -1,6 +1,6 @@
 # 🏠 RentaHogar
 
-![Landing page](Landing-page.png)
+![Landing page](capturas%20RentaHogar/Landing-page.png)
 
 ## 1. Resumen ejecutivo
 
@@ -32,7 +32,7 @@ Los inquilinos, por su parte, necesitan:
 
 ## 3. Visión del producto
 
-![Cómo funciona](como_funciona.png)
+![Cómo funciona](capturas%20RentaHogar/como_funciona.png)
 
 Proporcionar una plataforma única donde propietarios e inquilinos gestionan el ciclo completo del alquiler de forma sencilla, transparente y profesional, con notificaciones automáticas y acceso 24/7.
 
@@ -69,7 +69,7 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 ## 6. Funcionalidades por rol
 
-![Funcionalidades](funcionalidades.png)
+![Funcionalidades](capturas%20RentaHogar/funcionalidades.png)
 
 ### 6.1 Propietario
 
@@ -88,14 +88,14 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 **Capturas del portal propietario:**
 
-![Dashboard propietario](Dashboard_propietario.png)
-![Propiedades](propiedades.png)
-![Inquilinos](inquilinos.png)
-![Formulario nuevo inquilino](formulario_nuevo_inquilino.png)
-![Cobros](cobros.png)
-![Facturas](facturas.png)
-![Incidencias](incidencias.png)
-![Perfil](Perfil.png)
+![Dashboard propietario](capturas%20RentaHogar/Dashboard_propietario.png)
+![Propiedades](capturas%20RentaHogar/propiedades.png)
+![Inquilinos](capturas%20RentaHogar/inquilinos.png)
+![Formulario nuevo inquilino](capturas%20RentaHogar/formulario_nuevo_inquilino.png)
+![Cobros](capturas%20RentaHogar/cobros.png)
+![Facturas](capturas%20RentaHogar/facturas.png)
+![Incidencias](capturas%20RentaHogar/incidencias.png)
+![Perfil](capturas%20RentaHogar/Perfil.png)
 
 ### 6.2 Inquilino
 
@@ -110,7 +110,7 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 **Capturas del portal inquilino:**
 
-![Dashboard inquilino](dashboard_inquilino.png)
+![Dashboard inquilino](capturas%20RentaHogar/dashboard_inquilino.png)
 
 ---
 
@@ -118,9 +118,9 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 ### 7.1 Autenticación y autorización
 
-![Portales](portales.png)
-![Registro](registro.png)
-![Inicio de sesión](inicio_sesion.png)
+![Portales](capturas%20RentaHogar/portales.png)
+![Registro](capturas%20RentaHogar/registro.png)
+![Inicio de sesión](capturas%20RentaHogar/inicio_sesion.png)
 
 - Registro solo como propietario (email, contraseña, nombre)
 - Login con JWT; token en header Authorization
@@ -131,7 +131,7 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 ### 7.2 Propiedades
 
-![Formulario nueva propiedad](formulario_nueva_propiedad.png)
+![Formulario nueva propiedad](capturas%20RentaHogar/formulario_nueva_propiedad.png)
 
 - Tipos: apartamento, casa, estudio, habitación, local comercial
 - Dirección: calle, ciudad, código postal, país opcional
@@ -148,7 +148,7 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 ### 7.4 Facturas
 
-![Formulario nueva factura](formulario_nueva_factura.png)
+![Formulario nueva factura](capturas%20RentaHogar/formulario_nueva_factura.png)
 
 - Tipos: water, gas, electricity, internet, community, insurance, other
 - Periodo: `periodStart` / `periodEnd` (mes, año)
@@ -158,7 +158,7 @@ Proporcionar una plataforma única donde propietarios e inquilinos gestionan el 
 
 ### 7.5 Incidencias
 
-![Formulario incidencias](formulario_incidencias.png)
+![Formulario incidencias](capturas%20RentaHogar/formulario_incidencias.png)
 
 - Tipos: plumbing, electrical, structural, appliance, heating, pest, other
 - Prioridades: low, medium, high, urgent

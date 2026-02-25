@@ -24,7 +24,7 @@ API REST para la gestión integral de propiedades en alquiler. Permite a los pro
 - **Autenticación**: JWT (jsonwebtoken + bcryptjs)
 - **Validación**: express-validator
 - **Logging**: Winston + Morgan (logs condicionales según NODE_ENV)
-- **Email**: Nodemailer
+- **Email**: SendGrid API (producción) / Nodemailer SMTP (desarrollo)
 - **Tareas programadas**: node-cron
 - **Subida de archivos**: Multer
 - **Tooling**: ESLint (@typescript-eslint) + Prettier + tsx
@@ -75,7 +75,8 @@ ng serve              # Iniciar en http://localhost:4200
 | `PORT` | Puerto del servidor (default: 3000) |
 | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` | Conexión PostgreSQL |
 | `JWT_SECRET`, `JWT_EXPIRES_IN` | Configuración JWT |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Configuración email |
+| `SENDGRID_API_KEY`, `SENDGRID_FROM_EMAIL` | Email vía SendGrid API (recomendado para Render) |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Email vía SMTP (alternativa, desarrollo local) |
 | `FRONTEND_URL` | URL del frontend (CORS y enlaces en emails) |
 
 ### Credenciales de prueba (seed)

@@ -23,16 +23,13 @@ services:
       # Añade estas variables en el Dashboard de Render tras crear el servicio:
       # - DATABASE_URL (si usas Neon/Supabase) o DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
       # - FRONTEND_URL (URL de tu Static Site, ej: https://rentahogar.onrender.com)
-      # - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS (para emails)
+      # - SENDGRID_API_KEY, SENDGRID_FROM_EMAIL (recomendado para Render)
+      # - O SMTP_* si prefieres Nodemailer
       - key: DATABASE_URL
         sync: false
       - key: FRONTEND_URL
         sync: false
-      - key: SMTP_HOST
-        value: smtp.gmail.com
-      - key: SMTP_PORT
-        value: "587"
-      - key: SMTP_USER
+      - key: SENDGRID_API_KEY
         sync: false
-      - key: SMTP_PASS
+      - key: SENDGRID_FROM_EMAIL
         sync: false

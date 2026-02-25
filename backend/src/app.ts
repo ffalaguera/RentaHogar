@@ -9,9 +9,10 @@ import logger from './utils/logger';
 
 const app = express();
 
+// En desarrollo: permitir cualquier localhost (puerto 4200, 61748, etc.)
+// En producción: usar FRONTEND_URL
 const corsOrigin =
-  process.env.FRONTEND_URL ||
-  (process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === 'development'
     ? (origin: string | undefined, cb: (err: Error | null, allow?: boolean) => void) => {
         const allowed = !origin || /^https?:\/\/localhost(:\d+)?$/.test(origin);
         (cb as (err: Error | null, allow?: boolean | string) => void)(
@@ -19,7 +20,7 @@ const corsOrigin =
           allowed ? (origin ?? true) : false,
         );
       }
-    : 'http://localhost:4200');
+    : (process.env.FRONTEND_URL || 'http://localhost:4200');
 
 app.use(
   cors({
