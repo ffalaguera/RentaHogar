@@ -2,11 +2,23 @@ import { Sequelize } from 'sequelize';
 import logger from '../utils/logger';
 
 // Soporta DATABASE_URL (Neon, Supabase, Render) o variables individuales
-const connectionUri =
+let connectionUri =
   process.env.DATABASE_URL ||
   `postgres://${encodeURIComponent(process.env.DB_USER || 'postgres')}:${encodeURIComponent(
     process.env.DB_PASS || '',
   )}@${process.env.DB_HOST || '127.0.0.1'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'rental_management'}`;
+
+// Quitar sslmode de la URL: pg lo parsea y hace verify-full, rechazando certificados autofirmados.
+// Usamos dialectOptions.ssl.rejectUnauthorized: false en su lugar.
+if (process.env.DATABASE_URL) {
+  connectionUri = connectionUri
+    .replace(/[?&]sslmode=[^&]*/g, '')
+    .replace(/[?&]uselibpqcompat=[^&]*/g, '');
+  connectionUri = connectionUri.replace(/\?&+/, '?').replace(/\?$/, '');
+  if (connectionUri.includes('&') && !connectionUri.includes('?')) {
+    connectionUri = connectionUri.replace('&', '?');
+  }
+}
 
 const isCloudDb = !!process.env.DATABASE_URL;
 
