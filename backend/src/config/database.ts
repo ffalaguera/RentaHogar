@@ -8,9 +8,18 @@ const connectionUri =
     process.env.DB_PASS || '',
   )}@${process.env.DB_HOST || '127.0.0.1'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'rental_management'}`;
 
+const isCloudDb = !!process.env.DATABASE_URL;
+
 export const sequelize = new Sequelize(connectionUri, {
   dialect: 'postgres',
   logging: false,
+  dialectOptions: isCloudDb
+    ? {
+        ssl: {
+          rejectUnauthorized: false, // Render/Neon usan certificados autofirmados
+        },
+      }
+    : {},
 });
 
 export const connectDB = async (): Promise<void> => {
