@@ -16,6 +16,7 @@ export const sequelize = new Sequelize(connectionUri, {
   dialectOptions: isCloudDb
     ? {
         ssl: {
+          require: true,
           rejectUnauthorized: false, // Render/Neon usan certificados autofirmados
         },
       }
