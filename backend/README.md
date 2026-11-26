@@ -40,7 +40,7 @@ API REST para la gestión integral de propiedades en alquiler. Permite a los pro
 
 ### 1. Clonar el repositorio
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone https://github.com/ffalaguera/RentaHogar.git
 cd RentaHogar
 ```
 
