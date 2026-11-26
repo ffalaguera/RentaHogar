@@ -322,7 +322,7 @@ flowchart TB
 - El sistema es monolítico (backend único, base de datos única)
 - Solo existirá un propietario por cuenta; no hay gestión multi-propietario
 - Los inquilinos son creados exclusivamente por propietarios; no hay auto-registro de inquilinos
-- La base de datos es PostgreSQL (no MongoDB; la landing menciona MongoDB por error)
+- La base de datos es PostgreSQL
 - Proyecto con fines académicos; no producción comercial
 
 ---
@@ -348,8 +348,8 @@ Guía para que otra persona pueda ejecutar la aplicación en su máquina.
 ### Paso 1: Clonar el repositorio
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd rental-management
+git clone https://github.com/ffalaguera/RentaHogar.git
+cd RentaHogar
 ```
 
 ### Paso 2: Crear la base de datos en PostgreSQL
