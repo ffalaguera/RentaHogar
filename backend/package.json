@@ -24,7 +24,7 @@
     "api",
     "node",
     "express",
-    "mongodb"
+    "postgresql"
   ],
   "author": "",
   "license": "ISC",
